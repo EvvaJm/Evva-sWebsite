@@ -11,10 +11,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <!-- Three.js and GLTFLoader for Custom 3D Models -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
-
   <style>
     :root {
       --bg: #fff0f5; 
@@ -493,7 +489,7 @@
     .proj-tagline { font-size: 0.88rem; color: var(--pink-brand); font-weight: 700; margin-bottom: 12px; }
     .proj-card p { color: var(--text-muted); font-size: 0.94rem; line-height: 1.65; }
 
-    /* Experience Grid with Custom GLB Artifacts */
+    /* Experience Grid with Interactive Emojis */
     .exp-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -510,20 +506,29 @@
       justify-content: space-between;
       position: relative;
     }
-    .exp-3d-box {
+    .exp-emoji-box {
       width: 100%;
       height: 160px;
       border-radius: 16px;
       background: var(--bg-soft);
-      border: 1px solid var(--border);
+      border: 1px dashed var(--border-strong);
       margin-bottom: 18px;
       position: relative;
-      cursor: grab;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       overflow: hidden;
     }
-    .exp-3d-box:active { cursor: grabbing; }
-    .exp-3d-box canvas { width: 100%; height: 100%; display: block; outline: none; }
-    .exp-3d-hint {
+    .emoji-drag-target {
+      font-size: 5rem;
+      cursor: grab;
+      user-select: none;
+      touch-action: none; /* Prevents page scrolling while dragging on mobile */
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      will-change: transform;
+    }
+    .emoji-drag-target:active { cursor: grabbing; }
+    .exp-emoji-hint {
       position: absolute;
       bottom: 8px;
       right: 10px;
@@ -925,7 +930,7 @@
       </div>
     </section>
 
-    <!-- Experience & Leadership with Actual .GLB Loader logic -->
+    <!-- Experience & Leadership with Physics Drag Emojis -->
     <section id="experience" style="background: var(--bg-soft);">
       <div class="container">
         <div class="sec-header">
@@ -933,11 +938,11 @@
         </div>
 
         <div class="exp-grid">
-          <!-- Card 1: Escape Room (key.glb) -->
+          <!-- Card 1: Escape Room (Lock Emoji) -->
           <div class="exp-card">
-            <div class="exp-3d-box" id="keyCanvasBox" title="Click & Drag to rotate">
-              <canvas id="keyCanvas"></canvas>
-              <span class="exp-3d-hint">↺ Drag 3D Key</span>
+            <div class="exp-emoji-box">
+              <div class="emoji-drag-target">🔒</div>
+              <span class="exp-3d-hint">↺ Drag Me!</span>
             </div>
             <div>
               <span style="font-family:var(--mono); font-size:0.75rem; color:var(--pink-brand); font-weight:700;">TECH & FABRICATION</span>
@@ -951,11 +956,11 @@
             </div>
           </div>
 
-          <!-- Card 2: Softball Coaching (softball.glb) -->
+          <!-- Card 2: Softball Coaching (Softball Emoji) -->
           <div class="exp-card">
-            <div class="exp-3d-box" id="ballCanvasBox" title="Click & Drag to rotate">
-              <canvas id="ballCanvas"></canvas>
-              <span class="exp-3d-hint">↺ Drag 3D Ball</span>
+            <div class="exp-emoji-box">
+              <div class="emoji-drag-target">🥎</div>
+              <span class="exp-3d-hint">↺ Drag Me!</span>
             </div>
             <div>
               <span style="font-family:var(--mono); font-size:0.75rem; color:var(--pink-brand); font-weight:700;">ATHLETICS LEADERSHIP</span>
@@ -969,11 +974,11 @@
             </div>
           </div>
 
-          <!-- Card 3: AWS Cloud Club (cloud.glb) -->
+          <!-- Card 3: AWS Cloud Club (Cloud Emoji) -->
           <div class="exp-card">
-            <div class="exp-3d-box" id="cloudCanvasBox" title="Click & Drag to rotate">
-              <canvas id="cloudCanvas"></canvas>
-              <span class="exp-3d-hint">↺ Drag 3D Cloud</span>
+            <div class="exp-emoji-box">
+              <div class="emoji-drag-target">☁️</div>
+              <span class="exp-3d-hint">↺ Drag Me!</span>
             </div>
             <div>
               <span style="font-family:var(--mono); font-size:0.75rem; color:var(--pink-brand); font-weight:700;">CAMPUS INVOLVEMENT</span>
@@ -1042,7 +1047,7 @@
     <section id="contact">
       <div class="container">
         <div class="contact-box">
-          <h2 class="scramble-target" style="font-size:2.4rem; font-weight:800; color:var(--pink-deep); margin: 6px 0 12px;">
+          <h2 class="scramble-target" style="font-size:2.4rem; font-weight:800; color:var(--pink-deep); margin: 6px 0 12px; display:inline-block;">
             Have a project or co-op opportunity?
           </h2>
           <p style="color:var(--text-muted); max-width:520px; margin:0 auto;">
@@ -1146,122 +1151,37 @@
       }, 120);
     }
 
-
-    // --- 3. Three.js GLTFLoader Setup with FIXED AUTO-SCALING & LIGHTING ---
-    function initGLBViewer(boxId, canvasId, glbFilename, targetViewSize = 1.8) {
-      const box = document.getElementById(boxId);
-      const canvas = document.getElementById(canvasId);
-      if (!box || !canvas) return;
-
-      const scene = new THREE.Scene();
-      const camera = new THREE.PerspectiveCamera(40, box.clientWidth / box.clientHeight, 0.1, 1000);
-      camera.position.set(0, 0, 6); 
-
-      const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
-      renderer.setSize(box.clientWidth, box.clientHeight);
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-
-      // Stronger Lighting Setup for Flat Materials
-      const ambLight = new THREE.AmbientLight(0xffffff, 1.5);
-      scene.add(ambLight);
-      
-      const dirLight = new THREE.DirectionalLight(0xffffff, 2.0);
-      dirLight.position.set(5, 5, 4);
-      scene.add(dirLight);
-
-      const fillLight = new THREE.PointLight(0xffb3c6, 1.5, 20);
-      fillLight.position.set(-3, -2, 2);
-      scene.add(fillLight);
-
-      const objGroup = new THREE.Group();
-      scene.add(objGroup);
-
-      const loader = new THREE.GLTFLoader();
-      loader.load(
-        glbFilename,
-        (gltf) => {
-          const model = gltf.scene;
-          
-          // Force materials to react to light
-          model.traverse((child) => {
-            if (child.isMesh) {
-              child.material.needsUpdate = true;
-              child.material.metalness = 0.1;
-              child.material.roughness = 0.5;
-            }
-          });
-
-          // Calculate bounding box and re-center inside a wrapper
-          const box3 = new THREE.Box3().setFromObject(model);
-          const size = new THREE.Vector3();
-          box3.getSize(size);
-          const center = new THREE.Vector3();
-          box3.getCenter(center);
-          
-          const wrapper = new THREE.Group();
-          model.position.set(-center.x, -center.y, -center.z);
-          wrapper.add(model);
-          
-          // Aggressive Auto-Scale to fit the box cleanly
-          const maxDim = Math.max(size.x, size.y, size.z);
-          if (maxDim > 0) {
-            wrapper.scale.setScalar(targetViewSize / maxDim);
-          }
-          
-          objGroup.add(wrapper);
-        },
-        undefined,
-        (error) => {
-          console.error(`Could not load ${glbFilename}.`, error);
-        }
-      );
-
-      // Drag to Rotate logic
+    // --- 3. Interactive Spring-Physics Emoji Drag ---
+    document.querySelectorAll('.emoji-drag-target').forEach(el => {
       let isDragging = false;
-      let prevX = 0, prevY = 0;
-      let rotY = 0, rotX = 0;
+      let startX, startY;
+      let currentX = 0, currentY = 0;
 
-      box.addEventListener('pointerdown', (e) => {
+      el.addEventListener('pointerdown', e => {
         isDragging = true;
-        prevX = e.clientX;
-        prevY = e.clientY;
+        startX = e.clientX - currentX;
+        startY = e.clientY - currentY;
+        el.style.transition = 'none'; // remove spring animation while actively dragging
+        el.setPointerCapture(e.pointerId);
       });
 
-      window.addEventListener('pointermove', (e) => {
+      el.addEventListener('pointermove', e => {
         if (!isDragging) return;
-        const dx = e.clientX - prevX;
-        const dy = e.clientY - prevY;
-        prevX = e.clientX;
-        prevY = e.clientY;
-
-        rotY += dx * 0.015;
-        rotX += dy * 0.012;
+        currentX = e.clientX - startX;
+        currentY = e.clientY - startY;
+        el.style.transform = `translate(${currentX}px, ${currentY}px) scale(1.1)`;
       });
 
-      window.addEventListener('pointerup', () => { isDragging = false; });
-      box.addEventListener('pointerleave', () => { isDragging = false; });
-
-      function animate() {
-        requestAnimationFrame(animate);
-        if (!isDragging) rotY += 0.005; // Gentle spin when idle
-
-        objGroup.rotation.y += (rotY - objGroup.rotation.y) * 0.15;
-        objGroup.rotation.x += (rotX - objGroup.rotation.x) * 0.15;
-        renderer.render(scene, camera);
-      }
-      animate();
-
-      window.addEventListener('resize', () => {
-        camera.aspect = box.clientWidth / box.clientHeight;
-        camera.updateProjectionMatrix();
-        renderer.setSize(box.clientWidth, box.clientHeight);
+      el.addEventListener('pointerup', e => {
+        isDragging = false;
+        currentX = 0;
+        currentY = 0;
+        // Snap back with a bouncy spring curve
+        el.style.transition = 'transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)'; 
+        el.style.transform = `translate(0px, 0px) scale(1)`;
+        el.releasePointerCapture(e.pointerId);
       });
-    }
-
-    // Initialize downloaded models with view sizes
-    initGLBViewer('keyCanvasBox', 'keyCanvas', 'key.glb', 1.8); 
-    initGLBViewer('ballCanvasBox', 'ballCanvas', 'softball.glb', 1.4);
-    initGLBViewer('cloudCanvasBox', 'cloudCanvas', 'cloud.glb', 1.8);
+    });
 
     // --- 4. Command Palette (Cmd + K) ---
     const overlay = document.getElementById('cmdOverlay');
