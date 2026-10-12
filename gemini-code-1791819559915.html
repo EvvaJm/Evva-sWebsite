@@ -1,0 +1,1133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Evva Morrissey — Software Engineering student at University of Guelph specializing in Cybersecurity & Wearables.">
+  <title>Evva Morrissey — Software & Systems</title>
+
+  <!-- Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #fffbfd;
+      --bg-surface: #ffffff;
+      --bg-soft: #fff0f6;
+      --pink-brand: #e11d62;
+      --pink-deep: #8f0d3a;
+      --pink-light: #ffe5ee;
+      --pink-glow: rgba(225, 29, 98, 0.2);
+      --border: rgba(225, 29, 98, 0.14);
+      --border-strong: rgba(225, 29, 98, 0.28);
+      --text: #1d1217;
+      --text-muted: #695760;
+      --text-light: #9b8891;
+      --radius: 24px;
+      --mono: 'JetBrains Mono', monospace;
+      --sans: 'Plus Jakarta Sans', system-ui, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; background: var(--bg); color: var(--text); font-family: var(--sans); }
+    body { overflow-x: hidden; }
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; cursor: pointer; border: none; background: none; }
+    img { max-width: 100%; display: block; }
+
+    .container {
+      width: min(1200px, calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    /* Top Nav */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(18px);
+      background: rgba(255, 251, 253, 0.92);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 800;
+      font-size: 1.15rem;
+      color: var(--pink-deep);
+    }
+    .brand-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: 2px solid var(--pink-brand);
+      object-fit: cover;
+    }
+    .nav-links {
+      display: flex;
+      gap: 28px;
+      font-weight: 600;
+      font-size: 0.92rem;
+      color: var(--text-muted);
+    }
+    .nav-links a:hover { color: var(--pink-brand); }
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .btn-cmd {
+      background: white;
+      border: 1px solid var(--border);
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 2px 10px rgba(225, 29, 98, 0.04);
+      transition: all 0.2s ease;
+    }
+    .btn-cmd:hover { border-color: var(--pink-brand); color: var(--pink-brand); }
+    .btn-cmd kbd { background: var(--pink-light); color: var(--pink-brand); padding: 2px 6px; border-radius: 4px; font-size: 0.7rem; }
+    .btn-pink {
+      background: var(--pink-brand);
+      color: white;
+      padding: 10px 22px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 0.88rem;
+      box-shadow: 0 4px 18px var(--pink-glow);
+      transition: all 0.2s ease;
+    }
+    .btn-pink:hover { background: var(--pink-deep); transform: translateY(-1px); }
+
+    /* Hero Section */
+    .hero {
+      padding: 60px 0;
+      background: radial-gradient(circle at 85% 30%, rgba(255, 229, 238, 0.6) 0%, transparent 60%);
+    }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 36px;
+      align-items: center;
+    }
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: white;
+      border: 1px solid var(--border);
+      color: var(--pink-brand);
+      font-size: 0.84rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 14px rgba(225, 29, 98, 0.06);
+    }
+    .hero-eyebrow-dot { width: 8px; height: 8px; border-radius: 50%; background: #10b981; box-shadow: 0 0 8px #10b981; }
+    h1 {
+      font-size: clamp(3rem, 6vw, 4.6rem);
+      line-height: 1.05;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      color: var(--pink-deep);
+      margin-bottom: 20px;
+    }
+    .hero-p {
+      font-size: 1.15rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      max-width: 520px;
+      margin-bottom: 30px;
+    }
+
+    /* 3D Interactive Avatar Stage */
+    .avatar-3d-stage {
+      perspective: 1200px;
+      width: 100%;
+      max-width: 440px;
+      margin: 0 auto;
+    }
+    .avatar-card {
+      position: relative;
+      background: white;
+      border: 2px solid var(--border);
+      border-radius: 36px;
+      overflow: hidden;
+      box-shadow: 0 25px 60px rgba(143, 13, 58, 0.12);
+      transform-style: preserve-3d;
+      transition: transform 0.15s ease-out;
+      cursor: grab;
+      user-select: none;
+    }
+    .avatar-card:active { cursor: grabbing; }
+    .avatar-card img {
+      width: 100%;
+      aspect-ratio: 4 / 4.8;
+      object-fit: cover;
+      display: block;
+      pointer-events: none;
+    }
+    .drag-hint {
+      position: absolute;
+      bottom: 18px;
+      left: 50%;
+      transform: translateX(-50%) translateZ(30px);
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--border);
+      padding: 7px 16px;
+      border-radius: 999px;
+      font-family: var(--mono);
+      font-size: 0.74rem;
+      color: var(--pink-brand);
+      font-weight: 700;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 4px 14px rgba(225, 29, 98, 0.08);
+      white-space: nowrap;
+    }
+
+    /* Section Headers */
+    section { padding: 75px 0; }
+    .sec-header {
+      text-align: center;
+      max-width: 650px;
+      margin: 0 auto 46px;
+    }
+    .sec-kicker {
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      color: var(--pink-brand);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-weight: 700;
+    }
+    .sec-title {
+      font-size: clamp(2.2rem, 4vw, 3rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--pink-deep);
+      margin-top: 6px;
+    }
+
+    /* About Section */
+    .about-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 48px;
+      display: grid;
+      grid-template-columns: 0.85fr 1.15fr;
+      gap: 48px;
+      align-items: center;
+      box-shadow: 0 16px 45px rgba(143, 13, 58, 0.05);
+    }
+    .about-photo-frame {
+      border-radius: 24px;
+      overflow: hidden;
+      border: 4px solid var(--pink-light);
+      box-shadow: 0 16px 36px rgba(143, 13, 58, 0.1);
+    }
+    .about-photo-frame img {
+      width: 100%;
+      aspect-ratio: 4 / 5;
+      object-fit: cover;
+    }
+    .about-body p {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      line-height: 1.7;
+      margin-bottom: 18px;
+    }
+    .about-chips {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-top: 24px;
+    }
+    .chip {
+      background: var(--bg-soft);
+      border: 1px solid var(--border);
+      padding: 14px;
+      border-radius: 14px;
+    }
+    .chip strong {
+      display: block;
+      color: var(--pink-deep);
+      font-size: 0.92rem;
+    }
+    .chip span {
+      display: block;
+      color: var(--text-muted);
+      font-size: 0.82rem;
+      margin-top: 2px;
+    }
+
+    /* CLEARCALL 3-STAGE INTERACTIVE SHOWCASE */
+    .clearcall-hero-block {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 36px;
+      padding: 44px 30px;
+      box-shadow: 0 20px 60px rgba(143, 13, 58, 0.08);
+      display: grid;
+      grid-template-columns: 1fr 1.1fr 1fr;
+      gap: 24px;
+      align-items: center;
+    }
+
+    /* Left: Hand Holding Phone */
+    .phone-stage-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .phone-container {
+      position: relative;
+      width: 250px;
+      aspect-ratio: 1 / 1.77;
+      filter: drop-shadow(0 16px 28px rgba(143, 13, 58, 0.12));
+    }
+    .phone-bg-img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    .phone-screen-overlay {
+      position: absolute;
+      top: 10%;
+      left: 23%;
+      width: 55%;
+      height: 65%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 8px 6px;
+    }
+    .phone-screen-title {
+      font-family: var(--mono);
+      font-size: 0.6rem;
+      font-weight: 700;
+      color: #ff85ab;
+      text-align: center;
+      letter-spacing: 0.05em;
+    }
+    .phone-screen-btns {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .phone-btn {
+      background: rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(6px);
+      border: 1.5px solid rgba(255, 255, 255, 0.35);
+      border-radius: 8px;
+      padding: 6px 8px;
+      color: white;
+      font-size: 0.68rem;
+      font-weight: 700;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.15s ease;
+    }
+    .phone-btn:hover {
+      background: var(--pink-brand);
+      border-color: white;
+      transform: scale(1.03);
+    }
+    .phone-btn:active { transform: scale(0.96); }
+
+    /* Center: Narrative & Demo Link */
+    .center-stage-wrap {
+      text-align: center;
+      padding: 0 14px;
+    }
+    .pill-row {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .pill {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 8px;
+      background: var(--pink-light);
+      color: var(--pink-brand);
+      border: 1px solid var(--border);
+    }
+    .center-stage-wrap h3 {
+      font-size: 2.1rem;
+      font-weight: 800;
+      color: var(--pink-deep);
+      letter-spacing: -0.03em;
+      margin-bottom: 12px;
+    }
+    .center-stage-wrap p {
+      color: var(--text-muted);
+      font-size: 0.98rem;
+      line-height: 1.6;
+      margin-bottom: 22px;
+    }
+    .transmission-ray {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-family: var(--mono);
+      font-size: 0.76rem;
+      color: var(--pink-brand);
+      margin-bottom: 20px;
+    }
+    .transmission-dots {
+      width: 44px;
+      height: 2px;
+      background: repeating-linear-gradient(90deg, var(--pink-brand) 0, var(--pink-brand) 4px, transparent 4px, transparent 8px);
+      animation: rayMove 1s linear infinite;
+    }
+    @keyframes rayMove {
+      from { background-position: 0 0; }
+      to { background-position: 20px 0; }
+    }
+
+    /* Right: Hand with Smartwatch */
+    .watch-stage-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .watch-container {
+      position: relative;
+      width: 290px;
+      aspect-ratio: 1.25 / 1;
+      filter: drop-shadow(0 16px 28px rgba(143, 13, 58, 0.12));
+    }
+    .watch-bg-img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    .watch-screen-overlay {
+      position: absolute;
+      top: 25.5%;
+      left: 57.5%;
+      width: 26.5%;
+      height: 38%;
+      border-radius: 50%;
+      background: #0d090b;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 6px;
+      transition: all 0.2s ease;
+      box-shadow: 0 0 14px rgba(0,0,0,0.6);
+    }
+    .watch-rx {
+      font-family: var(--mono);
+      font-size: 0.5rem;
+      color: #9c8e94;
+      letter-spacing: 0.05em;
+    }
+    .watch-signal {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: #ff3377;
+      line-height: 1.1;
+      margin: 2px 0;
+      text-shadow: 0 0 8px rgba(255, 51, 119, 0.5);
+      transition: transform 0.15s ease;
+    }
+    .watch-zone {
+      font-family: var(--mono);
+      font-size: 0.56rem;
+      color: white;
+      font-weight: 700;
+    }
+    .watch-ping {
+      font-family: var(--mono);
+      font-size: 0.48rem;
+      color: #10b981;
+      margin-top: 2px;
+    }
+
+    /* Secondary Projects Cards */
+    .proj-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+      margin-top: 24px;
+    }
+    .proj-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 34px;
+      box-shadow: 0 10px 30px rgba(143, 13, 58, 0.04);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+    .proj-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--pink-brand);
+    }
+    .proj-card h3 {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--pink-deep);
+      margin: 12px 0 8px;
+    }
+    .proj-card p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+    .proj-preview-slot {
+      height: 150px;
+      border-radius: 14px;
+      background: var(--bg-soft);
+      border: 1px dashed var(--border-strong);
+      margin: 18px 0;
+      display: grid;
+      place-items: center;
+      color: var(--pink-brand);
+      font-family: var(--mono);
+      font-size: 0.8rem;
+    }
+
+    /* Experience / Jobs / Clubs Grid */
+    .exp-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    .exp-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 28px;
+      box-shadow: 0 8px 24px rgba(143, 13, 58, 0.04);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .exp-badge {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: var(--pink-light);
+      display: grid;
+      place-items: center;
+      font-size: 1.3rem;
+      margin-bottom: 16px;
+    }
+    .exp-card h4 {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--pink-deep);
+      margin-bottom: 8px;
+    }
+    .exp-card p {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      line-height: 1.55;
+    }
+
+    /* Contact Strip */
+    .contact-box {
+      background: linear-gradient(135deg, white, var(--bg-soft));
+      border: 1px solid var(--border);
+      border-radius: 32px;
+      padding: 60px 30px;
+      text-align: center;
+      margin: 40px 0 70px;
+      box-shadow: 0 16px 45px rgba(143, 13, 58, 0.06);
+    }
+    .contact-links {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      margin-top: 26px;
+      flex-wrap: wrap;
+    }
+    .contact-pill {
+      background: white;
+      border: 1px solid var(--border);
+      padding: 12px 22px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 0.92rem;
+      color: var(--pink-deep);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 12px rgba(143, 13, 58, 0.04);
+    }
+    .contact-pill:hover {
+      background: var(--pink-brand);
+      color: white;
+      border-color: var(--pink-brand);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px var(--pink-glow);
+    }
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 30px 0;
+      text-align: center;
+      font-size: 0.86rem;
+      color: var(--text-light);
+    }
+
+    /* Command Palette Drawer (Cmd+K) */
+    .cmd-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(29, 18, 23, 0.6);
+      backdrop-filter: blur(8px);
+      z-index: 999;
+      display: none;
+      place-items: center;
+      padding: 24px;
+    }
+    .cmd-overlay.open { display: grid; }
+    .cmd-box {
+      width: min(560px, 100%);
+      background: white;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      box-shadow: 0 30px 80px rgba(143, 13, 58, 0.2);
+      overflow: hidden;
+    }
+    .cmd-input-bar {
+      padding: 18px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .cmd-input-bar input {
+      width: 100%;
+      border: none;
+      outline: none;
+      font-family: var(--sans);
+      font-size: 1rem;
+      color: var(--text);
+    }
+    .cmd-list { padding: 12px; max-height: 300px; overflow-y: auto; }
+    .cmd-item {
+      padding: 12px 14px;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      cursor: pointer;
+    }
+    .cmd-item:hover { background: var(--bg-soft); color: var(--pink-brand); }
+
+    @media (max-width: 960px) {
+      .hero-grid, .about-card, .clearcall-hero-block, .proj-grid, .exp-grid {
+        grid-template-columns: 1fr;
+      }
+      .nav-links { display: none; }
+      .center-stage-wrap { order: -1; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Navigation -->
+  <nav>
+    <div class="container nav-inner">
+      <a class="brand" href="#top">
+        <img class="brand-avatar" src="Evva-Photo.png" alt="Evva">
+        <span>Evva Morrissey</span>
+      </a>
+
+      <div class="nav-links">
+        <a href="#about">About</a>
+        <a href="#clearcall">ClearCall Simulator</a>
+        <a href="#projects">Projects</a>
+        <a href="#experience">Experience & Clubs</a>
+        <a href="#contact">Contact</a>
+      </div>
+
+      <div class="nav-actions">
+        <button class="btn-cmd" id="cmdBtn"><span>Search</span> <kbd>⌘K</kbd></button>
+        <a class="btn-pink" href="#contact">Let's Talk</a>
+      </div>
+    </div>
+  </nav>
+
+  <main id="top">
+
+    <!-- Hero with Interactive 3D Card Parallax / Drag -->
+    <header class="hero">
+      <div class="container hero-grid">
+        <div>
+          <div class="hero-eyebrow">
+            <span class="hero-eyebrow-dot"></span> Available for Winter 2027 Co-op & Internships
+          </div>
+
+          <h1>Hi, I'm Evva! 👋</h1>
+
+          <p class="hero-p">
+            Software engineering student at the <strong>University of Guelph</strong> specializing in <strong>Cybersecurity</strong> with a minor in <strong>Project Management</strong>. I design reliable wearable systems, defensive architectures, and responsive software.
+          </p>
+
+          <div style="display:flex; gap:12px; flex-wrap:wrap;">
+            <a class="btn-pink" href="#clearcall">Test Watch Simulator ↓</a>
+            <a class="contact-pill" href="#about">About Me →</a>
+          </div>
+        </div>
+
+        <!-- 3D Card with Your Rendered Avatar -->
+        <div class="avatar-3d-stage">
+          <div class="avatar-card" id="avatarCard" title="Drag to tilt in 3D">
+            <img src="Gemini_Generated_Image_a27p2ma27p2ma27p.jpg" alt="3D Waving Evva Cartoon Avatar">
+            <div class="drag-hint">
+              <span>↺</span> Click & drag to rotate 3D view
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Dedicated About Me Section (With Real Photo) -->
+    <section id="about">
+      <div class="container">
+        <div class="sec-header">
+          <span class="sec-kicker">// Background</span>
+          <h2 class="sec-title">Where code meets people & execution.</h2>
+        </div>
+
+        <div class="about-card">
+          <div class="about-photo-frame">
+            <img src="Evva-Photo.png" alt="Photo of Evva Morrissey">
+          </div>
+
+          <div class="about-body">
+            <p>
+              Hey! I'm currently studying <strong>Software Engineering (Co-op)</strong> at the <strong>University of Guelph</strong>. I'm focusing my upper-year coursework in <strong>Cybersecurity</strong> and pairing it with a <strong>Project Management</strong> minor to bridge technical backend rigor with real team velocity.
+            </p>
+            <p>
+              Whether I'm writing low-latency Bluetooth packets for watches during diamond gameplay, fabricating custom 3D mechanisms for escape rooms, or managing defensive input sanitation, I love building things that solve tangible human challenges.
+            </p>
+
+            <div class="about-chips">
+              <div class="chip">
+                <strong>University of Guelph</strong>
+                <span>B.Comp Software Engineering</span>
+              </div>
+              <div class="chip">
+                <strong>Harvard CS50 Certified</strong>
+                <span>Defensive Cybersecurity</span>
+              </div>
+              <div class="chip">
+                <strong>AWS Cloud Club</strong>
+                <span>Serverless & Rapid Prototypes</span>
+              </div>
+              <div class="chip">
+                <strong>Softball Coach (KMGSA)</strong>
+                <span>Tactical Field Communication</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CLEARCALL 3-STAGE INTERACTIVE HARDWARE SHOWCASE -->
+    <section id="clearcall" style="background: var(--bg-soft);">
+      <div class="container">
+        <div class="sec-header">
+          <span class="sec-kicker">// Featured Interactive System</span>
+          <h2 class="sec-title">ClearCall Pitch Telemetry</h2>
+        </div>
+
+        <div class="clearcall-hero-block">
+          
+          <!-- Stage 1: Left 3D Hand Holding Phone -->
+          <div class="phone-stage-wrap">
+            <div class="phone-container">
+              <img class="phone-bg-img" src="Screenshot 2026-10-12 113603.png" alt="3D Hand Holding Phone">
+              <div class="phone-screen-overlay">
+                <div class="phone-screen-title">DUGOUT DISPATCH</div>
+                <div class="phone-screen-btns">
+                  <button class="phone-btn" onclick="sendSignal('FASTBALL', 'HIGH & TIGHT', '34ms')">
+                    <span>Fastball</span> <span>↗</span>
+                  </button>
+                  <button class="phone-btn" onclick="sendSignal('CHANGEUP', 'LOW AWAY', '41ms')">
+                    <span>Changeup</span> <span>↘</span>
+                  </button>
+                  <button class="phone-btn" onclick="sendSignal('RISEBALL', 'TOP CORNER', '28ms')">
+                    <span>Riseball</span> <span>↑</span>
+                  </button>
+                  <button class="phone-btn" onclick="sendSignal('STEAL 2ND', 'DEFENSE SHIFT', '30ms')">
+                    <span>Steal Call</span> <span>⚡</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <span style="font-family:var(--mono); font-size:0.75rem; color:var(--pink-brand); font-weight:700; margin-top:8px;">
+              TAP A BUTTON ON THE PHONE ↖
+            </span>
+          </div>
+
+          <!-- Stage 2: Middle Information & Video Link -->
+          <div class="center-stage-wrap">
+            <div class="pill-row">
+              <span class="pill">WEAR OS</span>
+              <span class="pill">BLUETOOTH LE</span>
+              <span class="pill">JAVA</span>
+              <span class="pill">PIXEL WATCH 2</span>
+            </div>
+
+            <h3>ClearCall</h3>
+
+            <p>
+              An encrypted dugout-to-wrist communication setup built for regulation softball games. Transmits instant pitch sequences and defensive signals from an Android phone directly to smartwatch displays on the diamond without cellular lag.
+            </p>
+
+            <div class="transmission-ray">
+              <span>LOCAL BLUETOOTH</span>
+              <div class="transmission-dots"></div>
+              <span>SUB-50MS</span>
+            </div>
+
+            <div style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap;">
+              <a href="https://github.com/EvvaJm" target="_blank" rel="noopener noreferrer" class="contact-pill" style="font-size:0.84rem; padding:10px 18px;">
+                View Code ↗
+              </a>
+              <a href="https://github.com/EvvaJm" target="_blank" rel="noopener noreferrer" class="btn-pink" style="font-size:0.84rem; padding:10px 18px;">
+                Watch 2-Min Demo 🎬
+              </a>
+            </div>
+          </div>
+
+          <!-- Stage 3: Right 3D Arm Wearing Pixel Watch -->
+          <div class="watch-stage-wrap">
+            <div class="watch-container">
+              <img class="watch-bg-img" src="Screenshot 2026-10-12 113625.png" alt="3D Hand with Smartwatch">
+              <div class="watch-screen-overlay" id="watchScreen">
+                <div class="watch-rx" id="watchStatus">RX: PAIRED</div>
+                <div class="watch-signal" id="watchPitch">FASTBALL</div>
+                <div class="watch-zone" id="watchZone">HIGH & TIGHT</div>
+                <div class="watch-ping" id="watchPing">34ms (BLE)</div>
+              </div>
+            </div>
+            <span style="font-family:var(--mono); font-size:0.75rem; color:var(--text-muted); font-weight:700; margin-top:8px;">
+              WATCH RECEIVES INSTANTLY ↗
+            </span>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Secondary Projects (Practice Planner + Beans NFC) -->
+    <section id="projects">
+      <div class="container">
+        <div class="sec-header">
+          <span class="sec-kicker">// More Projects</span>
+          <h2 class="sec-title">Systems & Cloud Applications</h2>
+        </div>
+
+        <div class="proj-grid">
+          <!-- Card 1 -->
+          <div class="proj-card">
+            <div>
+              <div class="pill-row" style="justify-content: flex-start;">
+                <span class="pill">C LANGUAGE</span>
+                <span class="pill">ALGORITHMS</span>
+              </div>
+              <h3>Dynamic Practice Planner</h3>
+              <p>
+                A command-line scheduling engine built in C that dynamically recalculates remaining drill time slices when early activities overrun, preventing sports sessions from extending past hard field-permit limits.
+              </p>
+            </div>
+
+            <div class="proj-preview-slot">
+              <span>[CLI Screenshot / Demo Video Slot]</span>
+            </div>
+
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-family:var(--mono); font-size:0.75rem; color:var(--pink-brand); font-weight:700;">
+                O(N) Reallocation
+              </span>
+              <a href="https://github.com/EvvaJm" target="_blank" rel="noopener noreferrer" style="font-weight:700; font-size:0.88rem; color:var(--pink-deep);">
+                View Details →
+              </a>
+            </div>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="proj-card">
+            <div>
+              <div class="pill-row" style="justify-content: flex-start;">
+                <span class="pill">WEB NFC API</span>
+                <span class="pill">FIREBASE</span>
+              </div>
+              <h3>Beans Recovery Care Tracker</h3>
+              <p>
+                A physical-to-digital health tracker connecting physical NFC tags placed around a rehabilitation environment with Firestore real-time databases for friction-free exercise check-ins.
+              </p>
+            </div>
+
+            <div class="proj-preview-slot">
+              <span>[Web & NFC Demo Video Slot]</span>
+            </div>
+
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-family:var(--mono); font-size:0.75rem; color:var(--pink-brand); font-weight:700;">
+                Realtime Sync
+              </span>
+              <a href="https://github.com/EvvaJm" target="_blank" rel="noopener noreferrer" style="font-weight:700; font-size:0.88rem; color:var(--pink-deep);">
+                View Details →
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Experience & Clubs Section -->
+    <section id="experience" style="background: var(--bg-soft);">
+      <div class="container">
+        <div class="sec-header">
+          <span class="sec-kicker">// Beyond Code</span>
+          <h2 class="sec-title">Jobs, leadership & student clubs.</h2>
+        </div>
+
+        <div class="exp-grid">
+          <!-- Job 1 -->
+          <div class="exp-card">
+            <div class="exp-badge">🖨️</div>
+            <div>
+              <span style="font-family:var(--mono); font-size:0.75rem; color:var(--pink-brand); font-weight:700;">TECH & FABRICATION</span>
+              <h4>KW Escape Associate</h4>
+              <p>
+                Fabricated custom physical game props using Astroprint 3D printing, monitored active rooms over operational camera feeds, and diagnosed electromechanical mechanism failures under strict gameplay time limits.
+              </p>
+            </div>
+          </div>
+
+          <!-- Job 2 / Coaching -->
+          <div class="exp-card">
+            <div class="exp-badge">🥎</div>
+            <div>
+              <span style="font-family:var(--mono); font-size:0.75rem; color:var(--pink-brand); font-weight:700;">ATHLETICS LEADERSHIP</span>
+              <h4>U13 Softball Head Coach</h4>
+              <p>
+                Coaching competitive teams with KMGSA. Instructing pitching and defensive execution, maintaining open family communication, and leading diamond drills in high-pressure tournaments.
+              </p>
+            </div>
+          </div>
+
+          <!-- Clubs -->
+          <div class="exp-card">
+            <div class="exp-badge">☁️</div>
+            <div>
+              <span style="font-family:var(--mono); font-size:0.75rem; color:var(--pink-brand); font-weight:700;">CAMPUS INVOLVEMENT</span>
+              <h4>U of G AWS Cloud Club</h4>
+              <p>
+                Active member in the University of Guelph AWS Cloud Computing Club. Building serverless architectures and participating in rapid "Sketch to Ship" collaborative sprint workshops.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact Wire -->
+    <section id="contact">
+      <div class="container">
+        <div class="contact-box">
+          <span class="sec-kicker">// Let's Connect</span>
+          <h2 style="font-size:2.4rem; font-weight:800; color:var(--pink-deep); margin: 6px 0 12px;">
+            Have a project or co-op opportunity?
+          </h2>
+          <p style="color:var(--text-muted); max-width:500px; margin:0 auto;">
+            Currently seeking Winter 2027 software engineering internships, cybersecurity co-ops, and systems engineering roles.
+          </p>
+
+          <div class="contact-links">
+            <a class="contact-pill" href="mailto:evva.morrissey@gmail.com">
+              ✉️ evva.morrissey@gmail.com
+            </a>
+            <a class="contact-pill" href="https://www.linkedin.com/in/evva-morrissey-599129399/" target="_blank" rel="noopener noreferrer">
+              💼 LinkedIn Profile ↗
+            </a>
+            <a class="contact-pill" href="https://github.com/EvvaJm" target="_blank" rel="noopener noreferrer">
+              💻 GitHub Workspace ↗
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <div class="container">
+      © 2026 Evva Morrissey · Software Engineering, University of Guelph
+    </div>
+  </footer>
+
+  <!-- Command Palette Drawer (Cmd+K) -->
+  <div class="cmd-overlay" id="cmdOverlay" role="dialog" aria-modal="true">
+    <div class="cmd-box">
+      <div class="cmd-input-bar">
+        <span style="color:var(--pink-brand); font-weight:800;">&gt;</span>
+        <input type="text" id="cmdInput" placeholder="Jump to section, demo, or contact..." autofocus>
+        <span style="font-size:0.75rem; color:var(--text-light); font-family:var(--mono);">ESC to close</span>
+      </div>
+      <div class="cmd-list">
+        <div class="cmd-item" onclick="jumpSection('#about')">
+          <span>👤 Read About Evva & School</span>
+          <span style="font-family:var(--mono); color:var(--pink-brand); font-size:0.75rem;">About</span>
+        </div>
+        <div class="cmd-item" onclick="jumpSection('#clearcall')">
+          <span>⚡ Try ClearCall Watch Simulator</span>
+          <span style="font-family:var(--mono); color:var(--pink-brand); font-size:0.75rem;">Interactive</span>
+        </div>
+        <div class="cmd-item" onclick="jumpSection('#projects')">
+          <span>💻 Practice Planner & NFC App</span>
+          <span style="font-family:var(--mono); color:var(--pink-brand); font-size:0.75rem;">Projects</span>
+        </div>
+        <div class="cmd-item" onclick="jumpSection('#experience')">
+          <span>🔧 KW Escape & Softball Coaching</span>
+          <span style="font-family:var(--mono); color:var(--pink-brand); font-size:0.75rem;">Experience</span>
+        </div>
+        <div class="cmd-item" onclick="window.open('https://github.com/EvvaJm', '_blank')">
+          <span>📁 Open GitHub Repositories</span>
+          <span style="font-family:var(--mono); color:var(--text-light); font-size:0.75rem;">External</span>
+        </div>
+        <div class="cmd-item" onclick="location.href='mailto:evva.morrissey@gmail.com'">
+          <span>✉️ Send Direct Email</span>
+          <span style="font-family:var(--mono); color:var(--text-light); font-size:0.75rem;">Mail</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- 1. Interactive 3D Avatar Card Drag & Tilt Physics ---
+    const card = document.getElementById('avatarCard');
+    let isDragging = false;
+    let startX = 0, startY = 0;
+    let currentRotX = 0, currentRotY = 0;
+    let targetRotX = 0, targetRotY = 0;
+
+    card.addEventListener('pointerdown', (e) => {
+      isDragging = true;
+      startX = e.clientX;
+      startY = e.clientY;
+      card.style.transition = 'none';
+    });
+
+    window.addEventListener('pointermove', (e) => {
+      if (!isDragging) return;
+      const deltaX = e.clientX - startX;
+      const deltaY = e.clientY - startY;
+      startX = e.clientX;
+      startY = e.clientY;
+
+      targetRotY += deltaX * 0.45;
+      targetRotX -= deltaY * 0.45;
+      // Clamp vertical rotation
+      targetRotX = Math.max(-25, Math.min(25, targetRotX));
+    });
+
+    window.addEventListener('pointerup', () => {
+      isDragging = false;
+      card.style.transition = 'transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1)';
+      targetRotX = 0;
+      targetRotY = 0;
+    });
+
+    function updateCardTilt() {
+      currentRotX += (targetRotX - currentRotX) * 0.15;
+      currentRotY += (targetRotY - currentRotY) * 0.15;
+      card.style.transform = `rotateX(${currentRotX}deg) rotateY(${currentRotY}deg) scale(${isDragging ? 1.03 : 1})`;
+      requestAnimationFrame(updateCardTilt);
+    }
+    updateCardTilt();
+
+    // --- 2. ClearCall 3-Stage Simulator Interaction ---
+    function sendSignal(pitch, zone, ping) {
+      const screen = document.getElementById('watchScreen');
+      const pitchEl = document.getElementById('watchPitch');
+      const zoneEl = document.getElementById('watchZone');
+      const pingEl = document.getElementById('watchPing');
+      const statusEl = document.getElementById('watchStatus');
+
+      // Visual pulse
+      screen.style.transform = 'scale(1.12)';
+      screen.style.boxShadow = '0 0 20px rgba(255, 51, 119, 0.6)';
+      statusEl.textContent = 'PACKET RX';
+      statusEl.style.color = '#ff5a8b';
+
+      setTimeout(() => {
+        pitchEl.textContent = pitch;
+        zoneEl.textContent = zone;
+        pingEl.textContent = `${ping} (BLE)`;
+        screen.style.transform = 'scale(1)';
+        screen.style.boxShadow = '0 0 14px rgba(0,0,0,0.6)';
+        statusEl.textContent = 'RX: PAIRED';
+        statusEl.style.color = '#9c8e94';
+      }, 120);
+    }
+
+    // --- 3. Command Palette (Cmd + K) ---
+    const overlay = document.getElementById('cmdOverlay');
+    const cmdBtn = document.getElementById('cmdBtn');
+    const cmdInput = document.getElementById('cmdInput');
+
+    function openCmd() { overlay.classList.add('open'); cmdInput.focus(); }
+    function closeCmd() { overlay.classList.remove('open'); cmdInput.value = ''; }
+
+    cmdBtn.addEventListener('click', openCmd);
+    window.addEventListener('keydown', (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        overlay.classList.contains('open') ? closeCmd() : openCmd();
+      }
+      if (e.key === 'Escape' && overlay.classList.contains('open')) closeCmd();
+    });
+    overlay.addEventListener('click', (e) => { if (e.target === overlay) closeCmd(); });
+
+    function jumpSection(id) {
+      closeCmd();
+      document.querySelector(id)?.scrollIntoView({ behavior: 'smooth' });
+    }
+  </script>
+</body>
+</html>
