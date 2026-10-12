@@ -3,13 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Evva Morrissey — Software Engineering student at University of Guelph specializing in Cybersecurity & Wearables.">
-  <title>Evva Morrissey — Software & Systems</title>
+  <meta name="description" content="Evva Morrissey — Software Engineering student at the University of Guelph specializing in Cybersecurity with a Project Management minor.">
+  <title>Evva Morrissey — Software Engineering</title>
 
   <!-- Typography -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Three.js and GLTFLoader for Custom 3D Models -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
 
   <style>
     :root {
@@ -19,7 +23,7 @@
       --pink-brand: #e11d62;
       --pink-deep: #8f0d3a;
       --pink-light: #ffe5ee;
-      --pink-glow: rgba(225, 29, 98, 0.2);
+      --pink-glow: rgba(225, 29, 98, 0.18);
       --border: rgba(225, 29, 98, 0.14);
       --border-strong: rgba(225, 29, 98, 0.28);
       --text: #1d1217;
@@ -74,7 +78,7 @@
     }
     .nav-links {
       display: flex;
-      gap: 28px;
+      gap: 24px;
       font-weight: 600;
       font-size: 0.92rem;
       color: var(--text-muted);
@@ -83,28 +87,30 @@
     .nav-actions {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
     }
-    .btn-cmd {
+    .btn-resume {
       background: white;
-      border: 1px solid var(--border);
-      padding: 8px 14px;
+      border: 1px solid var(--border-strong);
+      padding: 8px 16px;
       border-radius: 999px;
-      font-family: var(--mono);
-      font-size: 0.78rem;
-      color: var(--text-muted);
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: var(--pink-deep);
+      transition: all 0.2s ease;
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      box-shadow: 0 2px 10px rgba(225, 29, 98, 0.04);
-      transition: all 0.2s ease;
     }
-    .btn-cmd:hover { border-color: var(--pink-brand); color: var(--pink-brand); }
-    .btn-cmd kbd { background: var(--pink-light); color: var(--pink-brand); padding: 2px 6px; border-radius: 4px; font-size: 0.7rem; }
+    .btn-resume:hover {
+      background: var(--pink-light);
+      border-color: var(--pink-brand);
+      color: var(--pink-brand);
+    }
     .btn-pink {
       background: var(--pink-brand);
       color: white;
-      padding: 10px 22px;
+      padding: 9px 20px;
       border-radius: 999px;
       font-weight: 700;
       font-size: 0.88rem;
@@ -120,15 +126,14 @@
     }
     .hero-grid {
       display: grid;
-      grid-template-columns: 1.1fr 0.9fr;
+      grid-template-columns: 1.15fr 0.85fr;
       gap: 36px;
       align-items: center;
     }
     .hero-eyebrow {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      padding: 6px 14px;
+      padding: 6px 16px;
       border-radius: 999px;
       background: white;
       border: 1px solid var(--border);
@@ -136,79 +141,82 @@
       font-size: 0.84rem;
       font-weight: 700;
       margin-bottom: 20px;
-      box-shadow: 0 4px 14px rgba(225, 29, 98, 0.06);
+      box-shadow: 0 4px 14px rgba(225, 29, 98, 0.05);
     }
-    .hero-eyebrow-dot { width: 8px; height: 8px; border-radius: 50%; background: #10b981; box-shadow: 0 0 8px #10b981; }
-    h1 {
-      font-size: clamp(3rem, 6vw, 4.6rem);
-      line-height: 1.05;
+    
+    /* Interactive Headline */
+    .hero-title-interactive {
+      font-size: clamp(3rem, 5.8vw, 4.4rem);
+      line-height: 1.08;
       font-weight: 800;
       letter-spacing: -0.04em;
       color: var(--pink-deep);
       margin-bottom: 20px;
+      cursor: default;
+      user-select: none;
     }
+    .scramble-letter {
+      display: inline-block;
+      transition: transform 0.22s cubic-bezier(0.2, 0.8, 0.2, 1), color 0.18s ease;
+    }
+
     .hero-p {
-      font-size: 1.15rem;
+      font-size: 1.12rem;
       color: var(--text-muted);
-      line-height: 1.6;
-      max-width: 520px;
+      line-height: 1.65;
+      max-width: 540px;
       margin-bottom: 30px;
     }
 
-    /* 3D Interactive Avatar Stage */
-    .avatar-3d-stage {
-      perspective: 1200px;
-      width: 100%;
-      max-width: 440px;
-      margin: 0 auto;
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
     }
-    .avatar-card {
-      position: relative;
+
+    .contact-pill {
       background: white;
-      border: 2px solid var(--border);
+      border: 1px solid var(--border);
+      padding: 10px 22px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: var(--pink-deep);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 12px rgba(143, 13, 58, 0.04);
+    }
+    .contact-pill:hover {
+      background: var(--pink-brand);
+      color: white;
+      border-color: var(--pink-brand);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px var(--pink-glow);
+    }
+
+    /* Hero Avatar Frame */
+    .avatar-clean-frame {
+      width: min(380px, 100%);
+      margin: 0 auto;
       border-radius: 36px;
       overflow: hidden;
-      box-shadow: 0 25px 60px rgba(143, 13, 58, 0.12);
-      transform-style: preserve-3d;
-      transition: transform 0.15s ease-out;
-      cursor: grab;
-      user-select: none;
+      border: 3px solid white;
+      box-shadow: 0 24px 50px rgba(143, 13, 58, 0.12);
+      background: var(--bg-soft);
     }
-    .avatar-card:active { cursor: grabbing; }
-    .avatar-card img {
+    .avatar-clean-frame img {
       width: 100%;
       aspect-ratio: 4 / 4.8;
       object-fit: cover;
-      display: block;
-      pointer-events: none;
-    }
-    .drag-hint {
-      position: absolute;
-      bottom: 18px;
-      left: 50%;
-      transform: translateX(-50%) translateZ(30px);
-      background: rgba(255, 255, 255, 0.92);
-      backdrop-filter: blur(8px);
-      border: 1px solid var(--border);
-      padding: 7px 16px;
-      border-radius: 999px;
-      font-family: var(--mono);
-      font-size: 0.74rem;
-      color: var(--pink-brand);
-      font-weight: 700;
-      pointer-events: none;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      box-shadow: 0 4px 14px rgba(225, 29, 98, 0.08);
-      white-space: nowrap;
     }
 
     /* Section Headers */
     section { padding: 75px 0; }
     .sec-header {
       text-align: center;
-      max-width: 650px;
+      max-width: 680px;
       margin: 0 auto 46px;
     }
     .sec-kicker {
@@ -252,7 +260,7 @@
     }
     .about-body p {
       color: var(--text-muted);
-      font-size: 1.05rem;
+      font-size: 1.02rem;
       line-height: 1.7;
       margin-bottom: 18px;
     }
@@ -280,92 +288,88 @@
       margin-top: 2px;
     }
 
-    /* CLEARCALL 3-STAGE INTERACTIVE SHOWCASE */
+    /* CLEARCALL 3-STAGE INTERACTIVE HARDWARE SHOWCASE */
     .clearcall-hero-block {
       background: white;
       border: 1px solid var(--border);
       border-radius: 36px;
-      padding: 44px 30px;
+      padding: 50px 24px;
       box-shadow: 0 20px 60px rgba(143, 13, 58, 0.08);
       display: grid;
-      grid-template-columns: 1fr 1.1fr 1fr;
-      gap: 24px;
+      grid-template-columns: 1fr 1.25fr 1fr;
+      gap: 20px;
       align-items: center;
     }
 
-    /* Left: Hand Holding Phone */
-    .phone-stage-wrap {
+    .phone-stage-wrap, .watch-stage-wrap {
       display: flex;
       flex-direction: column;
       align-items: center;
     }
-    .phone-container {
+    .phone-image-container {
       position: relative;
       width: 250px;
-      aspect-ratio: 1 / 1.77;
-      filter: drop-shadow(0 16px 28px rgba(143, 13, 58, 0.12));
+      aspect-ratio: 1 / 1.42;
     }
-    .phone-bg-img {
+    .phone-image-container img, .watch-image-container img {
       width: 100%;
       height: 100%;
       object-fit: contain;
+      filter: drop-shadow(0 14px 28px rgba(143, 13, 58, 0.08));
     }
     .phone-screen-overlay {
       position: absolute;
-      top: 10%;
-      left: 23%;
-      width: 55%;
-      height: 65%;
+      top: 19.5%;
+      left: 33.5%;
+      width: 39%;
+      height: 57.5%;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      padding: 8px 6px;
+      padding: 8px 4px;
     }
     .phone-screen-title {
       font-family: var(--mono);
-      font-size: 0.6rem;
-      font-weight: 700;
-      color: #ff85ab;
+      font-size: 0.64rem;
+      font-weight: 800;
+      color: #ff4d88;
       text-align: center;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 2px;
     }
     .phone-screen-btns {
       display: flex;
       flex-direction: column;
+      justify-content: space-between;
+      height: 100%;
       gap: 6px;
     }
-    .phone-btn {
+    .clean-phone-btn {
+      flex: 1;
       background: rgba(255, 255, 255, 0.12);
       backdrop-filter: blur(6px);
-      border: 1.5px solid rgba(255, 255, 255, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.28);
       border-radius: 8px;
-      padding: 6px 8px;
       color: white;
-      font-size: 0.68rem;
+      font-size: 0.62rem;
       font-weight: 700;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      padding: 0 8px;
       transition: all 0.15s ease;
     }
-    .phone-btn:hover {
-      background: var(--pink-brand);
-      border-color: white;
-      transform: scale(1.03);
-    }
-    .phone-btn:active { transform: scale(0.96); }
+    .clean-phone-btn:hover { background: var(--pink-brand); border-color: white; transform: scale(1.03); }
+    .clean-phone-btn:active { transform: scale(0.96); }
 
-    /* Center: Narrative & Demo Link */
-    .center-stage-wrap {
-      text-align: center;
-      padding: 0 14px;
-    }
+    .center-stage-wrap { text-align: center; padding: 0 10px; }
     .pill-row {
       display: flex;
       justify-content: center;
       flex-wrap: wrap;
       gap: 8px;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
     .pill {
       font-family: var(--mono);
@@ -382,13 +386,20 @@
       font-weight: 800;
       color: var(--pink-deep);
       letter-spacing: -0.03em;
-      margin-bottom: 12px;
+      margin-bottom: 4px;
+    }
+    .project-subtitle {
+      font-size: 0.95rem;
+      color: var(--pink-brand);
+      font-weight: 700;
+      margin-bottom: 14px;
     }
     .center-stage-wrap p {
       color: var(--text-muted);
-      font-size: 0.98rem;
+      font-size: 0.93rem;
       line-height: 1.6;
-      margin-bottom: 22px;
+      margin-bottom: 18px;
+      text-align: left;
     }
     .transmission-ray {
       display: flex;
@@ -406,71 +417,42 @@
       background: repeating-linear-gradient(90deg, var(--pink-brand) 0, var(--pink-brand) 4px, transparent 4px, transparent 8px);
       animation: rayMove 1s linear infinite;
     }
-    @keyframes rayMove {
-      from { background-position: 0 0; }
-      to { background-position: 20px 0; }
-    }
+    @keyframes rayMove { from { background-position: 0 0; } to { background-position: 20px 0; } }
 
-    /* Right: Hand with Smartwatch */
-    .watch-stage-wrap {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    .watch-container {
-      position: relative;
-      width: 290px;
-      aspect-ratio: 1.25 / 1;
-      filter: drop-shadow(0 16px 28px rgba(143, 13, 58, 0.12));
-    }
-    .watch-bg-img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-    }
+    .watch-image-container { position: relative; width: 275px; aspect-ratio: 1 / 1.34; }
     .watch-screen-overlay {
       position: absolute;
-      top: 25.5%;
-      left: 57.5%;
-      width: 26.5%;
-      height: 38%;
+      top: 39%;
+      left: 58.8%;
+      width: 24.5%;
+      height: 18.5%;
       border-radius: 50%;
-      background: #0d090b;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       text-align: center;
-      padding: 6px;
+      padding: 4px;
       transition: all 0.2s ease;
-      box-shadow: 0 0 14px rgba(0,0,0,0.6);
-    }
-    .watch-rx {
-      font-family: var(--mono);
-      font-size: 0.5rem;
-      color: #9c8e94;
-      letter-spacing: 0.05em;
+      pointer-events: none;
     }
     .watch-signal {
-      font-size: 0.95rem;
+      font-size: 0.68rem;
       font-weight: 800;
       color: #ff3377;
-      line-height: 1.1;
-      margin: 2px 0;
-      text-shadow: 0 0 8px rgba(255, 51, 119, 0.5);
+      line-height: 1.05;
+      text-transform: uppercase;
+      text-shadow: 0 0 6px rgba(255, 51, 119, 0.6);
       transition: transform 0.15s ease;
     }
     .watch-zone {
       font-family: var(--mono);
-      font-size: 0.56rem;
+      font-size: 0.44rem;
       color: white;
       font-weight: 700;
-    }
-    .watch-ping {
-      font-family: var(--mono);
-      font-size: 0.48rem;
-      color: #10b981;
       margin-top: 2px;
+      text-transform: uppercase;
+      line-height: 1;
     }
 
     /* Secondary Projects Cards */
@@ -491,70 +473,90 @@
       justify-content: space-between;
       transition: transform 0.2s ease, border-color 0.2s ease;
     }
-    .proj-card:hover {
-      transform: translateY(-4px);
-      border-color: var(--pink-brand);
-    }
-    .proj-card h3 {
-      font-size: 1.4rem;
-      font-weight: 800;
-      color: var(--pink-deep);
-      margin: 12px 0 8px;
-    }
-    .proj-card p {
-      color: var(--text-muted);
-      font-size: 0.95rem;
-      line-height: 1.6;
-    }
-    .proj-preview-slot {
-      height: 150px;
-      border-radius: 14px;
-      background: var(--bg-soft);
-      border: 1px dashed var(--border-strong);
-      margin: 18px 0;
-      display: grid;
-      place-items: center;
-      color: var(--pink-brand);
-      font-family: var(--mono);
-      font-size: 0.8rem;
-    }
+    .proj-card:hover { transform: translateY(-4px); border-color: var(--pink-brand); }
+    .proj-card h3 { font-size: 1.45rem; font-weight: 800; color: var(--pink-deep); margin-top: 10px; }
+    .proj-tagline { font-size: 0.88rem; color: var(--pink-brand); font-weight: 700; margin-bottom: 12px; }
+    .proj-card p { color: var(--text-muted); font-size: 0.94rem; line-height: 1.65; }
 
-    /* Experience / Jobs / Clubs Grid */
+    /* Experience Grid with Custom GLB Artifacts */
     .exp-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 20px;
+      gap: 24px;
     }
     .exp-card {
       background: white;
       border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 28px;
+      border-radius: 24px;
+      padding: 24px;
       box-shadow: 0 8px 24px rgba(143, 13, 58, 0.04);
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      position: relative;
     }
-    .exp-badge {
-      width: 44px;
-      height: 44px;
-      border-radius: 12px;
-      background: var(--pink-light);
+    .exp-3d-box {
+      width: 100%;
+      height: 160px;
+      border-radius: 16px;
+      background: var(--bg-soft);
+      border: 1px solid var(--border);
+      margin-bottom: 18px;
+      position: relative;
+      cursor: grab;
+      overflow: hidden;
+    }
+    .exp-3d-box:active { cursor: grabbing; }
+    .exp-3d-box canvas { width: 100%; height: 100%; display: block; outline: none; }
+    .exp-3d-hint {
+      position: absolute;
+      bottom: 8px;
+      right: 10px;
+      font-family: var(--mono);
+      font-size: 0.64rem;
+      color: var(--pink-brand);
+      font-weight: 700;
+      pointer-events: none;
+      background: rgba(255, 255, 255, 0.85);
+      padding: 2px 8px;
+      border-radius: 999px;
+    }
+    .exp-card h4 { font-size: 1.18rem; font-weight: 800; color: var(--pink-deep); margin-bottom: 8px; }
+    .exp-card p { color: var(--text-muted); font-size: 0.91rem; line-height: 1.6; }
+
+    /* Technical Skills Section */
+    .skills-grid {
       display: grid;
-      place-items: center;
-      font-size: 1.3rem;
-      margin-bottom: 16px;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-top: 30px;
     }
-    .exp-card h4 {
-      font-size: 1.15rem;
+    .skill-box {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: 0 6px 20px rgba(143, 13, 58, 0.03);
+    }
+    .skill-box h4 {
+      font-size: 1rem;
       font-weight: 800;
       color: var(--pink-deep);
-      margin-bottom: 8px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
-    .exp-card p {
-      color: var(--text-muted);
-      font-size: 0.9rem;
-      line-height: 1.55;
+    .skill-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+    .skill-tag {
+      font-family: var(--mono);
+      font-size: 0.74rem;
+      font-weight: 600;
+      padding: 5px 10px;
+      border-radius: 8px;
+      background: var(--bg-soft);
+      border: 1px solid var(--border);
+      color: var(--pink-deep);
     }
 
     /* Contact Strip */
@@ -574,27 +576,6 @@
       margin-top: 26px;
       flex-wrap: wrap;
     }
-    .contact-pill {
-      background: white;
-      border: 1px solid var(--border);
-      padding: 12px 22px;
-      border-radius: 999px;
-      font-weight: 700;
-      font-size: 0.92rem;
-      color: var(--pink-deep);
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      transition: all 0.2s ease;
-      box-shadow: 0 4px 12px rgba(143, 13, 58, 0.04);
-    }
-    .contact-pill:hover {
-      background: var(--pink-brand);
-      color: white;
-      border-color: var(--pink-brand);
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px var(--pink-glow);
-    }
     footer {
       border-top: 1px solid var(--border);
       padding: 30px 0;
@@ -603,56 +584,8 @@
       color: var(--text-light);
     }
 
-    /* Command Palette Drawer (Cmd+K) */
-    .cmd-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(29, 18, 23, 0.6);
-      backdrop-filter: blur(8px);
-      z-index: 999;
-      display: none;
-      place-items: center;
-      padding: 24px;
-    }
-    .cmd-overlay.open { display: grid; }
-    .cmd-box {
-      width: min(560px, 100%);
-      background: white;
-      border-radius: 20px;
-      border: 1px solid var(--border);
-      box-shadow: 0 30px 80px rgba(143, 13, 58, 0.2);
-      overflow: hidden;
-    }
-    .cmd-input-bar {
-      padding: 18px 20px;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .cmd-input-bar input {
-      width: 100%;
-      border: none;
-      outline: none;
-      font-family: var(--sans);
-      font-size: 1rem;
-      color: var(--text);
-    }
-    .cmd-list { padding: 12px; max-height: 300px; overflow-y: auto; }
-    .cmd-item {
-      padding: 12px 14px;
-      border-radius: 10px;
-      font-size: 0.9rem;
-      font-weight: 600;
-      color: var(--text-muted);
-      display: flex;
-      justify-content: space-between;
-      cursor: pointer;
-    }
-    .cmd-item:hover { background: var(--bg-soft); color: var(--pink-brand); }
-
     @media (max-width: 960px) {
-      .hero-grid, .about-card, .clearcall-hero-block, .proj-grid, .exp-grid {
+      .hero-grid, .about-card, .clearcall-hero-block, .proj-grid, .exp-grid, .skills-grid {
         grid-template-columns: 1fr;
       }
       .nav-links { display: none; }
@@ -673,59 +606,63 @@
 
       <div class="nav-links">
         <a href="#about">About</a>
-        <a href="#clearcall">ClearCall Simulator</a>
+        <a href="#clearcall">ClearCall</a>
         <a href="#projects">Projects</a>
-        <a href="#experience">Experience & Clubs</a>
+        <a href="#experience">Leadership & Clubs</a>
+        <a href="#skills">Skills</a>
         <a href="#contact">Contact</a>
       </div>
 
       <div class="nav-actions">
-        <button class="btn-cmd" id="cmdBtn"><span>Search</span> <kbd>⌘K</kbd></button>
-        <a class="btn-pink" href="#contact">Let's Talk</a>
+        <!-- Resume Link -->
+        <a class="btn-resume" href="Evva_Morrissey_Resume.pdf" target="_blank" rel="noopener noreferrer">
+          <span>Resume (PDF)</span> ↗
+        </a>
+        <a class="btn-pink" href="#contact">Get in Touch</a>
       </div>
     </div>
   </nav>
 
   <main id="top">
 
-    <!-- Hero with Interactive 3D Card Parallax / Drag -->
+    <!-- Hero Section -->
     <header class="hero">
       <div class="container hero-grid">
         <div>
           <div class="hero-eyebrow">
-            <span class="hero-eyebrow-dot"></span> Available for Winter 2027 Co-op & Internships
+            Available for Winter 2027 Co-ops & Internships
           </div>
 
-          <h1>Hi, I'm Evva! 👋</h1>
+          <!-- Interactive Magnetic Headline with waving hand emoji -->
+          <h1 class="hero-title-interactive" id="interactiveTitle">
+            Hi, I'm evva 👋
+          </h1>
 
           <p class="hero-p">
-            Software engineering student at the <strong>University of Guelph</strong> specializing in <strong>Cybersecurity</strong> with a minor in <strong>Project Management</strong>. I design reliable wearable systems, defensive architectures, and responsive software.
+            I'm a software engineering student at the University of Guelph who loves turning ideas into practical technology. From building apps that solve real-world problems to exploring cloud computing and cybersecurity, I'm always looking for new ways to learn, create, and improve. Looking for a winter 2027 co-op.
           </p>
 
-          <div style="display:flex; gap:12px; flex-wrap:wrap;">
-            <a class="btn-pink" href="#clearcall">Test Watch Simulator ↓</a>
-            <a class="contact-pill" href="#about">About Me →</a>
+          <div class="hero-actions">
+            <a class="btn-pink" href="#clearcall">Explore My Projects ↓</a>
+            <a class="contact-pill" href="#contact">Get in Touch ↗</a>
           </div>
         </div>
 
-        <!-- 3D Card with Your Rendered Avatar -->
-        <div class="avatar-3d-stage">
-          <div class="avatar-card" id="avatarCard" title="Drag to tilt in 3D">
-            <img src="Gemini_Generated_Image_a27p2ma27p2ma27p.jpg" alt="3D Waving Evva Cartoon Avatar">
-            <div class="drag-hint">
-              <span>↺</span> Click & drag to rotate 3D view
-            </div>
+        <!-- Clean Avatar Frame -->
+        <div>
+          <div class="avatar-clean-frame">
+            <img src="Gemini_Generated_Image_a27p2ma27p2ma27p.jpg" alt="3D Cartoon Avatar of Evva">
           </div>
         </div>
       </div>
     </header>
 
-    <!-- Dedicated About Me Section (With Real Photo) -->
+    <!-- About Me Section -->
     <section id="about">
       <div class="container">
         <div class="sec-header">
           <span class="sec-kicker">// Background</span>
-          <h2 class="sec-title">Where code meets people & execution.</h2>
+          <h2 class="sec-title">A Little About Me</h2>
         </div>
 
         <div class="about-card">
@@ -735,28 +672,31 @@
 
           <div class="about-body">
             <p>
-              Hey! I'm currently studying <strong>Software Engineering (Co-op)</strong> at the <strong>University of Guelph</strong>. I'm focusing my upper-year coursework in <strong>Cybersecurity</strong> and pairing it with a <strong>Project Management</strong> minor to bridge technical backend rigor with real team velocity.
+              I'm currently studying software engineering at the University of Guelph, where I'm building my foundation in programming, software development, and problem-solving. I'm specializing in cybersecurity and minoring in project management. I enjoy exploring new technologies, teaching myself new skills, and taking on projects that challenge me beyond what I'm learning in school.
             </p>
             <p>
-              Whether I'm writing low-latency Bluetooth packets for watches during diamond gameplay, fabricating custom 3D mechanisms for escape rooms, or managing defensive input sanitation, I love building things that solve tangible human challenges.
+              Outside of school, I'm a long-time softball player and I currently coach a U13 rep team. Coaching has taught me a lot about communication, leadership, teamwork, and adapting to different people's needs, and I bring those same skills into my technical projects, where I enjoy thinking about not how something works, but how it can work better for the people who are using it.
+            </p>
+            <p>
+              I'm also a member of the University of Guelph AWS Cloud Computing Club and the University of Guelph GDG (Google Developer Groups) Club as well.
             </p>
 
             <div class="about-chips">
               <div class="chip">
                 <strong>University of Guelph</strong>
-                <span>B.Comp Software Engineering</span>
+                <span>Software Engineering (Co-op)</span>
               </div>
               <div class="chip">
-                <strong>Harvard CS50 Certified</strong>
-                <span>Defensive Cybersecurity</span>
+                <strong>Cybersecurity & PM</strong>
+                <span>Specialization & Minor</span>
               </div>
               <div class="chip">
-                <strong>AWS Cloud Club</strong>
-                <span>Serverless & Rapid Prototypes</span>
+                <strong>Kitchener Classics</strong>
+                <span>U13 Rep Softball Coach</span>
               </div>
               <div class="chip">
-                <strong>Softball Coach (KMGSA)</strong>
-                <span>Tactical Field Communication</span>
+                <strong>Student Clubs</strong>
+                <span>AWS Cloud & Google Developer Groups</span>
               </div>
             </div>
           </div>
@@ -768,29 +708,29 @@
     <section id="clearcall" style="background: var(--bg-soft);">
       <div class="container">
         <div class="sec-header">
-          <span class="sec-kicker">// Featured Interactive System</span>
-          <h2 class="sec-title">ClearCall Pitch Telemetry</h2>
+          <span class="sec-kicker">// Featured Project</span>
+          <h2 class="sec-title">ClearCall</h2>
         </div>
 
         <div class="clearcall-hero-block">
           
-          <!-- Stage 1: Left 3D Hand Holding Phone -->
+          <!-- Stage 1: Hand Holding Phone -->
           <div class="phone-stage-wrap">
-            <div class="phone-container">
-              <img class="phone-bg-img" src="Screenshot 2026-10-12 113603.png" alt="3D Hand Holding Phone">
+            <div class="phone-image-container">
+              <img src="PHONEhand.png" alt="Hand Holding Phone">
               <div class="phone-screen-overlay">
-                <div class="phone-screen-title">DUGOUT DISPATCH</div>
+                <div class="phone-screen-title">ClearCall</div>
                 <div class="phone-screen-btns">
-                  <button class="phone-btn" onclick="sendSignal('FASTBALL', 'HIGH & TIGHT', '34ms')">
+                  <button class="clean-phone-btn" onclick="sendSignal('FASTBALL', 'HIGH & IN')">
                     <span>Fastball</span> <span>↗</span>
                   </button>
-                  <button class="phone-btn" onclick="sendSignal('CHANGEUP', 'LOW AWAY', '41ms')">
+                  <button class="clean-phone-btn" onclick="sendSignal('CHANGEUP', 'LOW AWAY')">
                     <span>Changeup</span> <span>↘</span>
                   </button>
-                  <button class="phone-btn" onclick="sendSignal('RISEBALL', 'TOP CORNER', '28ms')">
+                  <button class="clean-phone-btn" onclick="sendSignal('RISEBALL', 'TOP CORNER')">
                     <span>Riseball</span> <span>↑</span>
                   </button>
-                  <button class="phone-btn" onclick="sendSignal('STEAL 2ND', 'DEFENSE SHIFT', '30ms')">
+                  <button class="clean-phone-btn" onclick="sendSignal('STEAL 2ND', 'SHIFT COVER')">
                     <span>Steal Call</span> <span>⚡</span>
                   </button>
                 </div>
@@ -801,46 +741,45 @@
             </span>
           </div>
 
-          <!-- Stage 2: Middle Information & Video Link -->
+          <!-- Stage 2: Middle Information -->
           <div class="center-stage-wrap">
             <div class="pill-row">
               <span class="pill">WEAR OS</span>
               <span class="pill">BLUETOOTH LE</span>
               <span class="pill">JAVA</span>
-              <span class="pill">PIXEL WATCH 2</span>
+              <span class="pill">ANDROID STUDIO</span>
             </div>
 
             <h3>ClearCall</h3>
+            <div class="project-subtitle">A simpler way for coaches to communicate with players.</div>
 
             <p>
-              An encrypted dugout-to-wrist communication setup built for regulation softball games. Transmits instant pitch sequences and defensive signals from an Android phone directly to smartwatch displays on the diamond without cellular lag.
+              ClearCall is a wearable communication app designed to provide a more accessible alternative to expensive, specialized communication systems used in competitive baseball and softball teams. The project connects an Android phone to a Google Pixel Watch over Bluetooth, allowing a coach to send signals from a sideline device directly to a player wearing the watch on the field. The watch provides both vibrations and on-screen messages, allowing the player to receive instructions quickly during a game.
+            </p>
+            <p>
+              I developed the project with softball in mind, exploring how wearable technology can improve communication between pitchers, catchers, and coaches in game. Using Android Studio and AI assistant development tools, I worked through the challenges of implementing Bluetooth communication and connecting the phone and watch components. The project gave me hands-on experience with mobile development, device connectivity, and designing technology around the practical needs of its users.
             </p>
 
             <div class="transmission-ray">
               <span>LOCAL BLUETOOTH</span>
               <div class="transmission-dots"></div>
-              <span>SUB-50MS</span>
+              <span>INSTANT SYNC</span>
             </div>
 
             <div style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap;">
               <a href="https://github.com/EvvaJm" target="_blank" rel="noopener noreferrer" class="contact-pill" style="font-size:0.84rem; padding:10px 18px;">
-                View Code ↗
-              </a>
-              <a href="https://github.com/EvvaJm" target="_blank" rel="noopener noreferrer" class="btn-pink" style="font-size:0.84rem; padding:10px 18px;">
-                Watch 2-Min Demo 🎬
+                View Code on GitHub ↗
               </a>
             </div>
           </div>
 
-          <!-- Stage 3: Right 3D Arm Wearing Pixel Watch -->
+          <!-- Stage 3: Watch in Hand -->
           <div class="watch-stage-wrap">
-            <div class="watch-container">
-              <img class="watch-bg-img" src="Screenshot 2026-10-12 113625.png" alt="3D Hand with Smartwatch">
+            <div class="watch-image-container">
+              <img src="watchhand.png" alt="Hand with Smartwatch">
               <div class="watch-screen-overlay" id="watchScreen">
-                <div class="watch-rx" id="watchStatus">RX: PAIRED</div>
                 <div class="watch-signal" id="watchPitch">FASTBALL</div>
-                <div class="watch-zone" id="watchZone">HIGH & TIGHT</div>
-                <div class="watch-ping" id="watchPing">34ms (BLE)</div>
+                <div class="watch-zone" id="watchZone">HIGH & IN</div>
               </div>
             </div>
             <span style="font-family:var(--mono); font-size:0.75rem; color:var(--text-muted); font-weight:700; margin-top:8px;">
@@ -852,35 +791,39 @@
       </div>
     </section>
 
-    <!-- Secondary Projects (Practice Planner + Beans NFC) -->
+    <!-- Secondary Projects Section -->
     <section id="projects">
       <div class="container">
         <div class="sec-header">
           <span class="sec-kicker">// More Projects</span>
-          <h2 class="sec-title">Systems & Cloud Applications</h2>
+          <h2 class="sec-title">Systems & Applications</h2>
         </div>
 
         <div class="proj-grid">
-          <!-- Card 1 -->
+          <!-- Project 1: Dynamic Practice Planner -->
           <div class="proj-card">
             <div>
               <div class="pill-row" style="justify-content: flex-start;">
                 <span class="pill">C LANGUAGE</span>
                 <span class="pill">ALGORITHMS</span>
+                <span class="pill">LOGIC ENGINE</span>
               </div>
               <h3>Dynamic Practice Planner</h3>
+              <div class="proj-tagline">Making every minute of practice count.</div>
               <p>
-                A command-line scheduling engine built in C that dynamically recalculates remaining drill time slices when early activities overrun, preventing sports sessions from extending past hard field-permit limits.
+                The Dynamic Practice Planner is an app concept designed to help coaches manage practice schedules and drills when things don't always run according to plan. Coaches can enter drill names, plan durations, minimum and maximum time limits, and importance of each drill.
+              </p>
+              <p style="margin-top: 10px;">
+                When a drill finishes earlier or later than expected, the planner automatically redistributes the difference across the remaining drills, taking their relative importance into account. This helps coaches adapt to real-world changes while keeping their practices organized and prioritizing what matters most.
+              </p>
+              <p style="margin-top: 10px;">
+                I developed the core scheduling and logic of this in C and then have built the rest of the project using AI-assisted development. The concept is currently being tested by two coaches, giving me an opportunity to evaluate the logic against real-world coaching workflows and improve the experience based on user feedback.
               </p>
             </div>
 
-            <div class="proj-preview-slot">
-              <span>[CLI Screenshot / Demo Video Slot]</span>
-            </div>
-
-            <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div style="margin-top: 24px; display:flex; justify-content:space-between; align-items:center;">
               <span style="font-family:var(--mono); font-size:0.75rem; color:var(--pink-brand); font-weight:700;">
-                O(N) Reallocation
+                ✦ Active Coach Testing
               </span>
               <a href="https://github.com/EvvaJm" target="_blank" rel="noopener noreferrer" style="font-weight:700; font-size:0.88rem; color:var(--pink-deep);">
                 View Details →
@@ -888,26 +831,30 @@
             </div>
           </div>
 
-          <!-- Card 2 -->
+          <!-- Project 2: Beanz Recovery Tracker -->
           <div class="proj-card">
             <div>
               <div class="pill-row" style="justify-content: flex-start;">
-                <span class="pill">WEB NFC API</span>
                 <span class="pill">FIREBASE</span>
+                <span class="pill">HTML / CSS</span>
+                <span class="pill">NFC SYNC</span>
               </div>
-              <h3>Beans Recovery Care Tracker</h3>
+              <h3>Beanz Recovery Tracker</h3>
+              <div class="proj-tagline">Keeping everyone on the same page during recovery.</div>
               <p>
-                A physical-to-digital health tracker connecting physical NFC tags placed around a rehabilitation environment with Firestore real-time databases for friction-free exercise check-ins.
+                The Beanz Recovery Tracker is a recovery care tracking app inspired by the challenges of caring for my dog recovering from a spinal injury, IVDD. When our dog, Bean, was requiring lots of care, it was hard for all the family members to coordinate medication, meals, bathroom breaks, and other daily tasks.
+              </p>
+              <p style="margin-top: 10px;">
+                I wanted to create a simple way for everyone to record updates and see what's already been done throughout the day. The app uses a shared tracking approach with Firebase helping synchronize information across multiple family members' phones.
+              </p>
+              <p style="margin-top: 10px;">
+                I built the interface using HTML and CSS, exploring how backend services could support shared data and a more connected user experience. This project combines my interest in software development with a personal motivation for my dog, Bean, making a stressful caregiving process more organized, consistent, and manageable for my family.
               </p>
             </div>
 
-            <div class="proj-preview-slot">
-              <span>[Web & NFC Demo Video Slot]</span>
-            </div>
-
-            <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div style="margin-top: 24px; display:flex; justify-content:space-between; align-items:center;">
               <span style="font-family:var(--mono); font-size:0.75rem; color:var(--pink-brand); font-weight:700;">
-                Realtime Sync
+                ✦ Real-Time Sync
               </span>
               <a href="https://github.com/EvvaJm" target="_blank" rel="noopener noreferrer" style="font-weight:700; font-size:0.88rem; color:var(--pink-deep);">
                 View Details →
@@ -918,48 +865,115 @@
       </div>
     </section>
 
-    <!-- Experience & Clubs Section -->
+    <!-- Experience & Leadership with Actual .GLB Loader logic -->
     <section id="experience" style="background: var(--bg-soft);">
       <div class="container">
         <div class="sec-header">
-          <span class="sec-kicker">// Beyond Code</span>
-          <h2 class="sec-title">Jobs, leadership & student clubs.</h2>
+          <span class="sec-kicker">// Real-World Impact</span>
+          <h2 class="sec-title">Experience & Leadership</h2>
         </div>
 
         <div class="exp-grid">
-          <!-- Job 1 -->
+          <!-- Card 1: Escape Room (lock.glb) -->
           <div class="exp-card">
-            <div class="exp-badge">🖨️</div>
+            <div class="exp-3d-box" id="lockCanvasBox" title="Click & Drag to rotate">
+              <canvas id="lockCanvas"></canvas>
+              <span class="exp-3d-hint">↺ Drag 3D Lock</span>
+            </div>
             <div>
               <span style="font-family:var(--mono); font-size:0.75rem; color:var(--pink-brand); font-weight:700;">TECH & FABRICATION</span>
-              <h4>KW Escape Associate</h4>
+              <h4>KW Escape</h4>
               <p>
-                Fabricated custom physical game props using Astroprint 3D printing, monitored active rooms over operational camera feeds, and diagnosed electromechanical mechanism failures under strict gameplay time limits.
+                Working at KW Escape gave me experience working with customers, collaborating with teammates, and helping create engaging experiences for visitors. The role strengthened my communication, adaptability, and real-world problem-solving skills in a fast-paced interactive environment.
+              </p>
+              <p style="margin-top: 8px;">
+                I also was able to learn how to build custom 3D printed game pieces for the escape rooms using AstroPrint, diagnosing hardware components, and fixing puzzle mechanisms.
               </p>
             </div>
           </div>
 
-          <!-- Job 2 / Coaching -->
+          <!-- Card 2: Softball Coaching (softball.glb) -->
           <div class="exp-card">
-            <div class="exp-badge">🥎</div>
+            <div class="exp-3d-box" id="ballCanvasBox" title="Click & Drag to rotate">
+              <canvas id="ballCanvas"></canvas>
+              <span class="exp-3d-hint">↺ Drag 3D Ball</span>
+            </div>
             <div>
               <span style="font-family:var(--mono); font-size:0.75rem; color:var(--pink-brand); font-weight:700;">ATHLETICS LEADERSHIP</span>
-              <h4>U13 Softball Head Coach</h4>
+              <h4>U13 Competitive Softball Assistant Coach</h4>
               <p>
-                Coaching competitive teams with KMGSA. Instructing pitching and defensive execution, maintaining open family communication, and leading diamond drills in high-pressure tournaments.
+                As an assistant coach for the Kitchener Classics U13 competitive rep program, I support player development through practices, skill-building activities, and team instruction. After more than a decade of playing myself, I enjoy using my experience to help the younger athletes develop their skills and confidence.
+              </p>
+              <p style="margin-top: 8px;">
+                I also contribute to creating practice resources and worksheets that reinforce learning beyond the field. Coaching has strengthened my leadership, communication, planning, and teamwork skills, teaching me how to adapt my approach with different players. Softball has been the inspiration for a lot of my personal projects.
               </p>
             </div>
           </div>
 
-          <!-- Clubs -->
+          <!-- Card 3: AWS Cloud Club (cloud.glb) -->
           <div class="exp-card">
-            <div class="exp-badge">☁️</div>
+            <div class="exp-3d-box" id="cloudCanvasBox" title="Click & Drag to rotate">
+              <canvas id="cloudCanvas"></canvas>
+              <span class="exp-3d-hint">↺ Drag 3D Cloud</span>
+            </div>
             <div>
               <span style="font-family:var(--mono); font-size:0.75rem; color:var(--pink-brand); font-weight:700;">CAMPUS INVOLVEMENT</span>
-              <h4>U of G AWS Cloud Club</h4>
+              <h4>AWS Cloud Computing Club</h4>
               <p>
-                Active member in the University of Guelph AWS Cloud Computing Club. Building serverless architectures and participating in rapid "Sketch to Ship" collaborative sprint workshops.
+                As a member of the AWS Cloud Computing Club at the University of Guelph, I'm exploring cloud computing and expanding my understanding of the technologies used to build and deploy modern applications.
               </p>
+              <p style="margin-top: 8px;">
+                Being involved in the club gives me opportunities to learn beyond the classroom, connect with other students who are also eager to explore cloud architecture, and participate in collaborative workshops.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Technical Skills Section -->
+    <section id="skills">
+      <div class="container">
+        <div class="sec-header">
+          <span class="sec-kicker">// Toolkit</span>
+          <h2 class="sec-title">Technical Skills</h2>
+        </div>
+
+        <div class="skills-grid">
+          <div class="skill-box">
+            <h4><span>&lt;/&gt;</span> Languages & Systems</h4>
+            <div class="skill-tags">
+              <span class="skill-tag">C</span>
+              <span class="skill-tag">Python</span>
+              <span class="skill-tag">Java</span>
+              <span class="skill-tag">HTML</span>
+              <span class="skill-tag">CSS</span>
+              <span class="skill-tag">JavaScript</span>
+              <span class="skill-tag">Easy68K</span>
+            </div>
+          </div>
+
+          <div class="skill-box">
+            <h4><span>☁️</span> Cloud & Tools</h4>
+            <div class="skill-tags">
+              <span class="skill-tag">AWS S3</span>
+              <span class="skill-tag">AWS Kinesis</span>
+              <span class="skill-tag">Firebase</span>
+              <span class="skill-tag">Android Studio</span>
+              <span class="skill-tag">Git</span>
+              <span class="skill-tag">GitHub</span>
+              <span class="skill-tag">Linux</span>
+            </div>
+          </div>
+
+          <div class="skill-box">
+            <h4><span>🔒</span> Security & Fabrication</h4>
+            <div class="skill-tags">
+              <span class="skill-tag">Harvard CS50 Cybersecurity</span>
+              <span class="skill-tag">Defensive Coding</span>
+              <span class="skill-tag">3D Printing (AstroPrint)</span>
+              <span class="skill-tag">Wear OS</span>
+              <span class="skill-tag">Bluetooth LE</span>
             </div>
           </div>
         </div>
@@ -974,8 +988,8 @@
           <h2 style="font-size:2.4rem; font-weight:800; color:var(--pink-deep); margin: 6px 0 12px;">
             Have a project or co-op opportunity?
           </h2>
-          <p style="color:var(--text-muted); max-width:500px; margin:0 auto;">
-            Currently seeking Winter 2027 software engineering internships, cybersecurity co-ops, and systems engineering roles.
+          <p style="color:var(--text-muted); max-width:520px; margin:0 auto;">
+            Currently seeking Winter 2027 software engineering internships, cybersecurity co-ops, and development roles.
           </p>
 
           <div class="contact-links">
@@ -987,6 +1001,9 @@
             </a>
             <a class="contact-pill" href="https://github.com/EvvaJm" target="_blank" rel="noopener noreferrer">
               💻 GitHub Workspace ↗
+            </a>
+            <a class="contact-pill" href="Evva_Morrissey_Resume.pdf" target="_blank" rel="noopener noreferrer">
+              📄 View Resume (PDF) ↗
             </a>
           </div>
         </div>
@@ -1001,133 +1018,166 @@
     </div>
   </footer>
 
-  <!-- Command Palette Drawer (Cmd+K) -->
-  <div class="cmd-overlay" id="cmdOverlay" role="dialog" aria-modal="true">
-    <div class="cmd-box">
-      <div class="cmd-input-bar">
-        <span style="color:var(--pink-brand); font-weight:800;">&gt;</span>
-        <input type="text" id="cmdInput" placeholder="Jump to section, demo, or contact..." autofocus>
-        <span style="font-size:0.75rem; color:var(--text-light); font-family:var(--mono);">ESC to close</span>
-      </div>
-      <div class="cmd-list">
-        <div class="cmd-item" onclick="jumpSection('#about')">
-          <span>👤 Read About Evva & School</span>
-          <span style="font-family:var(--mono); color:var(--pink-brand); font-size:0.75rem;">About</span>
-        </div>
-        <div class="cmd-item" onclick="jumpSection('#clearcall')">
-          <span>⚡ Try ClearCall Watch Simulator</span>
-          <span style="font-family:var(--mono); color:var(--pink-brand); font-size:0.75rem;">Interactive</span>
-        </div>
-        <div class="cmd-item" onclick="jumpSection('#projects')">
-          <span>💻 Practice Planner & NFC App</span>
-          <span style="font-family:var(--mono); color:var(--pink-brand); font-size:0.75rem;">Projects</span>
-        </div>
-        <div class="cmd-item" onclick="jumpSection('#experience')">
-          <span>🔧 KW Escape & Softball Coaching</span>
-          <span style="font-family:var(--mono); color:var(--pink-brand); font-size:0.75rem;">Experience</span>
-        </div>
-        <div class="cmd-item" onclick="window.open('https://github.com/EvvaJm', '_blank')">
-          <span>📁 Open GitHub Repositories</span>
-          <span style="font-family:var(--mono); color:var(--text-light); font-size:0.75rem;">External</span>
-        </div>
-        <div class="cmd-item" onclick="location.href='mailto:evva.morrissey@gmail.com'">
-          <span>✉️ Send Direct Email</span>
-          <span style="font-family:var(--mono); color:var(--text-light); font-size:0.75rem;">Mail</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <script>
-    // --- 1. Interactive 3D Avatar Card Drag & Tilt Physics ---
-    const card = document.getElementById('avatarCard');
-    let isDragging = false;
-    let startX = 0, startY = 0;
-    let currentRotX = 0, currentRotY = 0;
-    let targetRotX = 0, targetRotY = 0;
+    // --- 1. Interactive Cursor Scramble Headline ---
+    const titleEl = document.getElementById('interactiveTitle');
+    const fullText = "Hi, I'm evva 👋";
+    titleEl.innerHTML = '';
 
-    card.addEventListener('pointerdown', (e) => {
-      isDragging = true;
-      startX = e.clientX;
-      startY = e.clientY;
-      card.style.transition = 'none';
+    const chars = Array.from(fullText);
+    const letterSpans = chars.map(char => {
+      const span = document.createElement('span');
+      span.textContent = char;
+      span.className = 'scramble-letter';
+      if (char === ' ') span.style.width = '0.35em';
+      titleEl.appendChild(span);
+      return span;
     });
 
-    window.addEventListener('pointermove', (e) => {
-      if (!isDragging) return;
-      const deltaX = e.clientX - startX;
-      const deltaY = e.clientY - startY;
-      startX = e.clientX;
-      startY = e.clientY;
+    titleEl.addEventListener('mousemove', (e) => {
+      const mouseX = e.clientX;
+      const mouseY = e.clientY;
 
-      targetRotY += deltaX * 0.45;
-      targetRotX -= deltaY * 0.45;
-      // Clamp vertical rotation
-      targetRotX = Math.max(-25, Math.min(25, targetRotX));
+      letterSpans.forEach(span => {
+        const spanRect = span.getBoundingClientRect();
+        const spanCenterX = spanRect.left + spanRect.width / 2;
+        const spanCenterY = spanRect.top + spanRect.height / 2;
+        const dist = Math.hypot(mouseX - spanCenterX, mouseY - spanCenterY);
+
+        if (dist < 85) {
+          const power = (1 - dist / 85) * 22;
+          const angle = Math.atan2(spanCenterY - mouseY, spanCenterX - mouseX);
+          const pushX = Math.cos(angle) * power;
+          const pushY = Math.sin(angle) * power;
+          const rot = (Math.random() - 0.5) * 28;
+
+          span.style.transform = `translate(${pushX}px, ${pushY}px) rotate(${rot}deg) scale(1.15)`;
+          span.style.color = 'var(--pink-brand)';
+        } else {
+          span.style.transform = 'translate(0, 0) rotate(0deg) scale(1)';
+          span.style.color = '';
+        }
+      });
     });
 
-    window.addEventListener('pointerup', () => {
-      isDragging = false;
-      card.style.transition = 'transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1)';
-      targetRotX = 0;
-      targetRotY = 0;
+    titleEl.addEventListener('mouseleave', () => {
+      letterSpans.forEach(span => {
+        span.style.transform = 'translate(0, 0) rotate(0deg) scale(1)';
+        span.style.color = '';
+      });
     });
 
-    function updateCardTilt() {
-      currentRotX += (targetRotX - currentRotX) * 0.15;
-      currentRotY += (targetRotY - currentRotY) * 0.15;
-      card.style.transform = `rotateX(${currentRotX}deg) rotateY(${currentRotY}deg) scale(${isDragging ? 1.03 : 1})`;
-      requestAnimationFrame(updateCardTilt);
-    }
-    updateCardTilt();
-
-    // --- 2. ClearCall 3-Stage Simulator Interaction ---
-    function sendSignal(pitch, zone, ping) {
+    // --- 2. Minimalist Phone to Watch Signal ---
+    function sendSignal(pitch, zone) {
       const screen = document.getElementById('watchScreen');
       const pitchEl = document.getElementById('watchPitch');
       const zoneEl = document.getElementById('watchZone');
-      const pingEl = document.getElementById('watchPing');
-      const statusEl = document.getElementById('watchStatus');
 
-      // Visual pulse
-      screen.style.transform = 'scale(1.12)';
-      screen.style.boxShadow = '0 0 20px rgba(255, 51, 119, 0.6)';
-      statusEl.textContent = 'PACKET RX';
-      statusEl.style.color = '#ff5a8b';
+      screen.style.transform = 'scale(1.16)';
+      pitchEl.style.color = '#ff6599';
 
       setTimeout(() => {
         pitchEl.textContent = pitch;
         zoneEl.textContent = zone;
-        pingEl.textContent = `${ping} (BLE)`;
         screen.style.transform = 'scale(1)';
-        screen.style.boxShadow = '0 0 14px rgba(0,0,0,0.6)';
-        statusEl.textContent = 'RX: PAIRED';
-        statusEl.style.color = '#9c8e94';
+        pitchEl.style.color = '#ff3377';
       }, 120);
     }
 
-    // --- 3. Command Palette (Cmd + K) ---
-    const overlay = document.getElementById('cmdOverlay');
-    const cmdBtn = document.getElementById('cmdBtn');
-    const cmdInput = document.getElementById('cmdInput');
+    // --- 3. Three.js GLTFLoader Setup for your .GLB files ---
+    function initGLBViewer(boxId, canvasId, glbFilename, initialScale = 1) {
+      const box = document.getElementById(boxId);
+      const canvas = document.getElementById(canvasId);
+      if (!box || !canvas) return;
 
-    function openCmd() { overlay.classList.add('open'); cmdInput.focus(); }
-    function closeCmd() { overlay.classList.remove('open'); cmdInput.value = ''; }
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(40, box.clientWidth / box.clientHeight, 0.1, 100);
+      camera.position.set(0, 0, 4);
 
-    cmdBtn.addEventListener('click', openCmd);
-    window.addEventListener('keydown', (e) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-        e.preventDefault();
-        overlay.classList.contains('open') ? closeCmd() : openCmd();
+      const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+      renderer.setSize(box.clientWidth, box.clientHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+      // Lighting suited for clay/cartoon models
+      const ambLight = new THREE.AmbientLight(0xffffff, 1.2);
+      scene.add(ambLight);
+      
+      const dirLight = new THREE.DirectionalLight(0xffffff, 1.5);
+      dirLight.position.set(3, 5, 4);
+      scene.add(dirLight);
+
+      const objGroup = new THREE.Group();
+      scene.add(objGroup);
+
+      // Load your .glb file
+      const loader = new THREE.GLTFLoader();
+      loader.load(
+        glbFilename,
+        (gltf) => {
+          const model = gltf.scene;
+          
+          // Auto-center the model so it spins nicely on its axis
+          const box3 = new THREE.Box3().setFromObject(model);
+          const center = box3.getCenter(new THREE.Vector3());
+          model.position.sub(center);
+          
+          model.scale.setScalar(initialScale);
+          objGroup.add(model);
+        },
+        undefined,
+        (error) => {
+          console.warn(`Could not load ${glbFilename}. Check that it is in the exact same folder as index.html`);
+        }
+      );
+
+      // Drag to Rotate logic
+      let isDragging = false;
+      let prevX = 0, prevY = 0;
+      let rotY = 0, rotX = 0;
+
+      box.addEventListener('pointerdown', (e) => {
+        isDragging = true;
+        prevX = e.clientX;
+        prevY = e.clientY;
+      });
+
+      window.addEventListener('pointermove', (e) => {
+        if (!isDragging) return;
+        const dx = e.clientX - prevX;
+        const dy = e.clientY - prevY;
+        prevX = e.clientX;
+        prevY = e.clientY;
+
+        rotY += dx * 0.015;
+        rotX += dy * 0.012;
+      });
+
+      window.addEventListener('pointerup', () => { isDragging = false; });
+      box.addEventListener('pointerleave', () => { isDragging = false; });
+
+      function animate() {
+        requestAnimationFrame(animate);
+        // Continuous smooth showcase spin if you aren't grabbing it
+        if (!isDragging) rotY += 0.008; 
+
+        objGroup.rotation.y += (rotY - objGroup.rotation.y) * 0.1;
+        objGroup.rotation.x += (rotX - objGroup.rotation.x) * 0.1;
+        renderer.render(scene, camera);
       }
-      if (e.key === 'Escape' && overlay.classList.contains('open')) closeCmd();
-    });
-    overlay.addEventListener('click', (e) => { if (e.target === overlay) closeCmd(); });
+      animate();
 
-    function jumpSection(id) {
-      closeCmd();
-      document.querySelector(id)?.scrollIntoView({ behavior: 'smooth' });
+      window.addEventListener('resize', () => {
+        camera.aspect = box.clientWidth / box.clientHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(box.clientWidth, box.clientHeight);
+      });
     }
+
+    // Initialize your three downloaded models
+    // You can adjust the "initialScale" number (e.g. 1.2 or 0.8) to make them fit nicely in the box
+    initGLBViewer('lockCanvasBox', 'lockCanvas', 'lock.glb', 1.0);
+    initGLBViewer('ballCanvasBox', 'ballCanvas', 'softball.glb', 1.0);
+    initGLBViewer('cloudCanvasBox', 'cloudCanvas', 'cloud.glb', 1.0);
   </script>
 </body>
 </html>
