@@ -17,7 +17,6 @@
 
   <style>
     :root {
-      /* Deepened the pink backgrounds as requested */
       --bg: #fff0f5; 
       --bg-surface: #ffffff;
       --bg-soft: #ffe4ee; 
@@ -55,7 +54,7 @@
       top: 0;
       z-index: 100;
       backdrop-filter: blur(18px);
-      background: rgba(255, 240, 245, 0.85); /* Matched to new bg */
+      background: rgba(255, 240, 245, 0.85); 
       border-bottom: 1px solid var(--border);
     }
     .nav-inner {
@@ -223,22 +222,13 @@
     .sec-header {
       text-align: center;
       max-width: 680px;
-      margin: 0 auto 46px;
-    }
-    .sec-kicker {
-      font-family: var(--mono);
-      font-size: 0.8rem;
-      color: var(--pink-brand);
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      font-weight: 700;
+      margin: 0 auto 36px; /* slightly reduced since we removed kickers */
     }
     .sec-title {
       font-size: clamp(2.2rem, 4vw, 3rem);
       font-weight: 800;
       letter-spacing: -0.03em;
       color: var(--pink-deep);
-      margin-top: 6px;
     }
 
     /* About Section */
@@ -461,7 +451,7 @@
       pointer-events: none;
     }
     .watch-signal {
-      font-size: 0.68rem; /* Scaled down */
+      font-size: 0.68rem; 
       font-weight: 800;
       color: #ff3377;
       line-height: 1.05;
@@ -471,7 +461,7 @@
     }
     .watch-zone {
       font-family: var(--mono);
-      font-size: 0.44rem; /* Scaled down */
+      font-size: 0.44rem;
       color: white;
       font-weight: 700;
       margin-top: 2px;
@@ -608,7 +598,7 @@
       color: var(--text-light);
     }
 
-    /* Command Palette Drawer */
+    /* Command Palette Drawer (Cmd+K) */
     .cmd-overlay {
       position: fixed;
       inset: 0;
@@ -705,8 +695,8 @@
             Available for Winter 2027 Co-ops & Internships
           </div>
 
-          <!-- Interactive Scramble Title -->
-          <h1 class="hero-title-interactive scramble-target">
+          <!-- Interactive Magnetic Headline with waving hand emoji -->
+          <h1 class="hero-title-interactive scramble-target" id="interactiveTitle">
             Hi, I'm Evva 👋
           </h1>
 
@@ -720,6 +710,7 @@
           </div>
         </div>
 
+        <!-- Clean Avatar Frame -->
         <div>
           <div class="avatar-clean-frame">
             <img src="Gemini_Generated_Image_a27p2ma27p2ma27p.jpg" alt="3D Cartoon Avatar of Evva">
@@ -732,7 +723,6 @@
     <section id="about">
       <div class="container">
         <div class="sec-header">
-          <span class="sec-kicker">// Background</span>
           <h2 class="sec-title scramble-target">A Little About Me</h2>
         </div>
 
@@ -779,7 +769,6 @@
     <section id="clearcall" style="background: var(--bg-soft);">
       <div class="container">
         <div class="sec-header">
-          <span class="sec-kicker">// Featured Project</span>
           <h2 class="sec-title scramble-target">ClearCall</h2>
         </div>
 
@@ -866,7 +855,6 @@
     <section id="projects">
       <div class="container">
         <div class="sec-header">
-          <span class="sec-kicker">// More Projects</span>
           <h2 class="sec-title scramble-target">Systems & Applications</h2>
         </div>
 
@@ -940,7 +928,6 @@
     <section id="experience" style="background: var(--bg-soft);">
       <div class="container">
         <div class="sec-header">
-          <span class="sec-kicker">// Real-World Impact</span>
           <h2 class="sec-title scramble-target">Experience & Leadership</h2>
         </div>
 
@@ -1006,7 +993,6 @@
     <section id="skills">
       <div class="container">
         <div class="sec-header">
-          <span class="sec-kicker">// Toolkit</span>
           <h2 class="sec-title scramble-target">Technical Skills</h2>
         </div>
 
@@ -1055,8 +1041,7 @@
     <section id="contact">
       <div class="container">
         <div class="contact-box">
-          <span class="sec-kicker">// Let's Connect</span>
-          <h2 style="font-size:2.4rem; font-weight:800; color:var(--pink-deep); margin: 6px 0 12px;">
+          <h2 class="scramble-target" style="font-size:2.4rem; font-weight:800; color:var(--pink-deep); margin: 6px 0 12px; display:inline-block;">
             Have a project or co-op opportunity?
           </h2>
           <p style="color:var(--text-muted); max-width:520px; margin:0 auto;">
@@ -1161,51 +1146,61 @@
     }
 
 
-    // --- 3. Three.js GLTFLoader Setup with AUTO-SCALING for huge files ---
-    function initGLBViewer(boxId, canvasId, glbFilename, targetViewSize = 2.0) {
+    // --- 3. Three.js GLTFLoader Setup with AGGRESSIVE AUTO-SCALING & LIGHTING ---
+    function initGLBViewer(boxId, canvasId, glbFilename, targetViewSize = 2.5) {
       const box = document.getElementById(boxId);
       const canvas = document.getElementById(canvasId);
       if (!box || !canvas) return;
 
       const scene = new THREE.Scene();
-      const camera = new THREE.PerspectiveCamera(40, box.clientWidth / box.clientHeight, 0.1, 100);
-      camera.position.set(0, 0, 4);
+      const camera = new THREE.PerspectiveCamera(40, box.clientWidth / box.clientHeight, 0.1, 1000);
+      camera.position.set(0, 0, 5); 
 
       const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
       renderer.setSize(box.clientWidth, box.clientHeight);
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-      // Lighting suited for clay/cartoon models
-      const ambLight = new THREE.AmbientLight(0xffffff, 1.2);
+      // Stronger Lighting Setup for Flat Materials
+      const ambLight = new THREE.AmbientLight(0xffffff, 1.5);
       scene.add(ambLight);
       
-      const dirLight = new THREE.DirectionalLight(0xffffff, 1.5);
-      dirLight.position.set(3, 5, 4);
+      const dirLight = new THREE.DirectionalLight(0xffffff, 2.0);
+      dirLight.position.set(5, 5, 4);
       scene.add(dirLight);
+
+      const fillLight = new THREE.PointLight(0xffb3c6, 1.5, 20);
+      fillLight.position.set(-3, -2, 2);
+      scene.add(fillLight);
 
       const objGroup = new THREE.Group();
       scene.add(objGroup);
 
-      // Load your .glb file
       const loader = new THREE.GLTFLoader();
       loader.load(
         glbFilename,
         (gltf) => {
           const model = gltf.scene;
           
-          // 1. Calculate the bounding box of the imported model
+          // Force materials to react to light (fixes flat models)
+          model.traverse((child) => {
+            if (child.isMesh) {
+              child.material.needsUpdate = true;
+              child.material.metalness = 0.1;
+              child.material.roughness = 0.5;
+            }
+          });
+
+          // Calculate bounding box and re-center
           const box3 = new THREE.Box3().setFromObject(model);
-          const size = box3.getSize(new THREE.Vector3());
-          const center = box3.getCenter(new THREE.Vector3());
+          const size = new THREE.Vector3();
+          box3.getSize(size);
+          const center = new THREE.Vector3();
+          box3.getCenter(center);
           
-          // 2. Re-center the model so it spins smoothly around its actual middle
-          model.position.x = -center.x;
-          model.position.y = -center.y;
-          model.position.z = -center.z;
+          model.position.sub(center);
           
-          // 3. AUTO-SCALE: Finds the largest side of the model, and scales it down to fit perfectly
+          // Aggressive Auto-Scale to fit the box cleanly
           const maxDim = Math.max(size.x, size.y, size.z);
-          // Prevent division by zero just in case
           if (maxDim > 0) {
             const scale = targetViewSize / maxDim;
             model.scale.setScalar(scale);
@@ -1215,7 +1210,7 @@
         },
         undefined,
         (error) => {
-          console.warn(`Could not load ${glbFilename}. Check that it is in the exact same folder as index.html`);
+          console.error(`Could not load ${glbFilename}.`, error);
         }
       );
 
@@ -1246,11 +1241,10 @@
 
       function animate() {
         requestAnimationFrame(animate);
-        // Continuous smooth showcase spin if you aren't grabbing it
-        if (!isDragging) rotY += 0.008; 
+        if (!isDragging) rotY += 0.005; // Gentle spin when idle
 
-        objGroup.rotation.y += (rotY - objGroup.rotation.y) * 0.1;
-        objGroup.rotation.x += (rotX - objGroup.rotation.x) * 0.1;
+        objGroup.rotation.y += (rotY - objGroup.rotation.y) * 0.15;
+        objGroup.rotation.x += (rotX - objGroup.rotation.x) * 0.15;
         renderer.render(scene, camera);
       }
       animate();
@@ -1262,11 +1256,10 @@
       });
     }
 
-    // Initialize your three downloaded models. 
-    // They will now auto-scale to exactly "2.0" view size, meaning they will fit perfectly in the box!
-    initGLBViewer('keyCanvasBox', 'keyCanvas', 'key.glb', 2.0);
-    initGLBViewer('ballCanvasBox', 'ballCanvas', 'softball.glb', 2.0);
-    initGLBViewer('cloudCanvasBox', 'cloudCanvas', 'cloud.glb', 2.0);
+    // Initialize your three downloaded models
+    initGLBViewer('keyCanvasBox', 'keyCanvas', 'key.glb', 2.8); 
+    initGLBViewer('ballCanvasBox', 'ballCanvas', 'softball.glb', 2.5);
+    initGLBViewer('cloudCanvasBox', 'cloudCanvas', 'cloud.glb', 2.8);
 
     // --- 4. Command Palette (Cmd + K) ---
     const overlay = document.getElementById('cmdOverlay');
