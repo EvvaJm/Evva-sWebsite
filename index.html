@@ -489,7 +489,7 @@
     .proj-tagline { font-size: 0.88rem; color: var(--pink-brand); font-weight: 700; margin-bottom: 12px; }
     .proj-card p { color: var(--text-muted); font-size: 0.94rem; line-height: 1.65; }
 
-    /* Experience Grid with Interactive Emojis */
+    /* Experience Grid with Interactive Emojis (Pseudo 3D Spin) */
     .exp-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -517,30 +517,23 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      overflow: hidden;
+      perspective: 800px; /* enables the 3D spin effect */
     }
-    .emoji-drag-target {
+    
+    /* True Native Keyboard Emojis Setup */
+    .emoji-spin-target {
       font-size: 5rem;
       cursor: grab;
       user-select: none;
-      touch-action: none; /* Prevents page scrolling while dragging on mobile */
-      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      touch-action: none;
+      transform-style: preserve-3d;
+      transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
       will-change: transform;
+      /* Forces proper colorful OS emoji rendering */
+      font-family: "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", emoji, sans-serif;
     }
-    .emoji-drag-target:active { cursor: grabbing; }
-    .exp-emoji-hint {
-      position: absolute;
-      bottom: 8px;
-      right: 10px;
-      font-family: var(--mono);
-      font-size: 0.64rem;
-      color: var(--pink-brand);
-      font-weight: 700;
-      pointer-events: none;
-      background: rgba(255, 255, 255, 0.85);
-      padding: 2px 8px;
-      border-radius: 999px;
-    }
+    .emoji-spin-target:active { cursor: grabbing; }
+    
     .exp-card h4 { font-size: 1.18rem; font-weight: 800; color: var(--pink-deep); margin-bottom: 8px; }
     .exp-card p { color: var(--text-muted); font-size: 0.91rem; line-height: 1.6; }
 
@@ -930,7 +923,7 @@
       </div>
     </section>
 
-    <!-- Experience & Leadership with Physics Drag Emojis -->
+    <!-- Experience & Leadership with Interactive Native Emojis -->
     <section id="experience" style="background: var(--bg-soft);">
       <div class="container">
         <div class="sec-header">
@@ -941,8 +934,7 @@
           <!-- Card 1: Escape Room (Lock Emoji) -->
           <div class="exp-card">
             <div class="exp-emoji-box">
-              <div class="emoji-drag-target">🔒</div>
-              <span class="exp-3d-hint">↺ Drag Me!</span>
+              <div class="emoji-spin-target">🔒</div>
             </div>
             <div>
               <span style="font-family:var(--mono); font-size:0.75rem; color:var(--pink-brand); font-weight:700;">TECH & FABRICATION</span>
@@ -959,8 +951,7 @@
           <!-- Card 2: Softball Coaching (Softball Emoji) -->
           <div class="exp-card">
             <div class="exp-emoji-box">
-              <div class="emoji-drag-target">🥎</div>
-              <span class="exp-3d-hint">↺ Drag Me!</span>
+              <div class="emoji-spin-target">🥎</div>
             </div>
             <div>
               <span style="font-family:var(--mono); font-size:0.75rem; color:var(--pink-brand); font-weight:700;">ATHLETICS LEADERSHIP</span>
@@ -977,8 +968,7 @@
           <!-- Card 3: AWS Cloud Club (Cloud Emoji) -->
           <div class="exp-card">
             <div class="exp-emoji-box">
-              <div class="emoji-drag-target">☁️</div>
-              <span class="exp-3d-hint">↺ Drag Me!</span>
+              <div class="emoji-spin-target">☁️</div>
             </div>
             <div>
               <span style="font-family:var(--mono); font-size:0.75rem; color:var(--pink-brand); font-weight:700;">CAMPUS INVOLVEMENT</span>
@@ -1151,34 +1141,40 @@
       }, 120);
     }
 
-    // --- 3. Interactive Spring-Physics Emoji Drag ---
-    document.querySelectorAll('.emoji-drag-target').forEach(el => {
+    // --- 3. Pseudo-3D Rotation Drag Emojis ---
+    document.querySelectorAll('.emoji-spin-target').forEach(el => {
       let isDragging = false;
       let startX, startY;
-      let currentX = 0, currentY = 0;
+      let targetRotX = 0, targetRotY = 0;
 
       el.addEventListener('pointerdown', e => {
         isDragging = true;
-        startX = e.clientX - currentX;
-        startY = e.clientY - currentY;
-        el.style.transition = 'none'; // remove spring animation while actively dragging
+        startX = e.clientX;
+        startY = e.clientY;
+        el.style.transition = 'none';
         el.setPointerCapture(e.pointerId);
       });
 
       el.addEventListener('pointermove', e => {
         if (!isDragging) return;
-        currentX = e.clientX - startX;
-        currentY = e.clientY - startY;
-        el.style.transform = `translate(${currentX}px, ${currentY}px) scale(1.1)`;
+        const dx = e.clientX - startX;
+        const dy = e.clientY - startY;
+        startX = e.clientX;
+        startY = e.clientY;
+        
+        targetRotY += dx * 0.6; // X mouse movement rotates around Y axis
+        targetRotX -= dy * 0.6; // Y mouse movement rotates around X axis
+        
+        el.style.transform = `rotateX(${targetRotX}deg) rotateY(${targetRotY}deg) scale(1.1)`;
       });
 
       el.addEventListener('pointerup', e => {
         isDragging = false;
-        currentX = 0;
-        currentY = 0;
-        // Snap back with a bouncy spring curve
-        el.style.transition = 'transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)'; 
-        el.style.transform = `translate(0px, 0px) scale(1)`;
+        targetRotX = 0;
+        targetRotY = 0;
+        // Smoothly snap back to facing forward
+        el.style.transition = 'transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)'; 
+        el.style.transform = `rotateX(0deg) rotateY(0deg) scale(1)`;
         el.releasePointerCapture(e.pointerId);
       });
     });
