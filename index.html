@@ -17,15 +17,18 @@
 
   <style>
     :root {
-      --bg: #fffbfd;
+      /* Deepened the pink backgrounds as requested */
+      --bg: #fff0f5; 
       --bg-surface: #ffffff;
-      --bg-soft: #fff0f6;
+      --bg-soft: #ffe4ee; 
+      
       --pink-brand: #e11d62;
       --pink-deep: #8f0d3a;
-      --pink-light: #ffe5ee;
+      --pink-light: #ffd1e3;
       --pink-glow: rgba(225, 29, 98, 0.18);
-      --border: rgba(225, 29, 98, 0.14);
-      --border-strong: rgba(225, 29, 98, 0.28);
+      --border: rgba(225, 29, 98, 0.16);
+      --border-strong: rgba(225, 29, 98, 0.32);
+      
       --text: #1d1217;
       --text-muted: #695760;
       --text-light: #9b8891;
@@ -52,7 +55,7 @@
       top: 0;
       z-index: 100;
       backdrop-filter: blur(18px);
-      background: rgba(255, 251, 253, 0.92);
+      background: rgba(255, 240, 245, 0.85); /* Matched to new bg */
       border-bottom: 1px solid var(--border);
     }
     .nav-inner {
@@ -122,7 +125,7 @@
     /* Hero Section */
     .hero {
       padding: 60px 0;
-      background: radial-gradient(circle at 85% 30%, rgba(255, 229, 238, 0.6) 0%, transparent 60%);
+      background: radial-gradient(circle at 85% 30%, rgba(255, 229, 238, 0.8) 0%, transparent 60%);
     }
     .hero-grid {
       display: grid;
@@ -143,8 +146,17 @@
       margin-bottom: 20px;
       box-shadow: 0 4px 14px rgba(225, 29, 98, 0.05);
     }
+
+    /* Magnetic Scramble Effect Base Class */
+    .scramble-target {
+      cursor: default;
+      user-select: none;
+    }
+    .scramble-letter {
+      display: inline-block;
+      transition: transform 0.22s cubic-bezier(0.2, 0.8, 0.2, 1), color 0.18s ease;
+    }
     
-    /* Interactive Headline */
     .hero-title-interactive {
       font-size: clamp(3rem, 5.8vw, 4.4rem);
       line-height: 1.08;
@@ -152,12 +164,6 @@
       letter-spacing: -0.04em;
       color: var(--pink-deep);
       margin-bottom: 20px;
-      cursor: default;
-      user-select: none;
-    }
-    .scramble-letter {
-      display: inline-block;
-      transition: transform 0.22s cubic-bezier(0.2, 0.8, 0.2, 1), color 0.18s ease;
     }
 
     .hero-p {
@@ -301,7 +307,7 @@
       align-items: center;
     }
 
-    .phone-stage-wrap, .watch-stage-wrap {
+    .phone-stage-wrap {
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -311,7 +317,7 @@
       width: 250px;
       aspect-ratio: 1 / 1.42;
     }
-    .phone-image-container img, .watch-image-container img {
+    .phone-image-container img {
       width: 100%;
       height: 100%;
       object-fit: contain;
@@ -363,7 +369,10 @@
     .clean-phone-btn:hover { background: var(--pink-brand); border-color: white; transform: scale(1.03); }
     .clean-phone-btn:active { transform: scale(0.96); }
 
-    .center-stage-wrap { text-align: center; padding: 0 10px; }
+    .center-stage-wrap {
+      text-align: center;
+      padding: 0 10px;
+    }
     .pill-row {
       display: flex;
       justify-content: center;
@@ -419,7 +428,22 @@
     }
     @keyframes rayMove { from { background-position: 0 0; } to { background-position: 20px 0; } }
 
-    .watch-image-container { position: relative; width: 275px; aspect-ratio: 1 / 1.34; }
+    .watch-stage-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .watch-image-container {
+      position: relative;
+      width: 275px;
+      aspect-ratio: 1 / 1.34;
+    }
+    .watch-image-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      filter: drop-shadow(0 14px 28px rgba(143, 13, 58, 0.08));
+    }
     .watch-screen-overlay {
       position: absolute;
       top: 39%;
@@ -437,7 +461,7 @@
       pointer-events: none;
     }
     .watch-signal {
-      font-size: 0.68rem;
+      font-size: 0.68rem; /* Scaled down */
       font-weight: 800;
       color: #ff3377;
       line-height: 1.05;
@@ -447,7 +471,7 @@
     }
     .watch-zone {
       font-family: var(--mono);
-      font-size: 0.44rem;
+      font-size: 0.44rem; /* Scaled down */
       color: white;
       font-weight: 700;
       margin-top: 2px;
@@ -584,6 +608,54 @@
       color: var(--text-light);
     }
 
+    /* Command Palette Drawer */
+    .cmd-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(29, 18, 23, 0.6);
+      backdrop-filter: blur(8px);
+      z-index: 999;
+      display: none;
+      place-items: center;
+      padding: 24px;
+    }
+    .cmd-overlay.open { display: grid; }
+    .cmd-box {
+      width: min(560px, 100%);
+      background: white;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      box-shadow: 0 30px 80px rgba(143, 13, 58, 0.2);
+      overflow: hidden;
+    }
+    .cmd-input-bar {
+      padding: 18px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .cmd-input-bar input {
+      width: 100%;
+      border: none;
+      outline: none;
+      font-family: var(--sans);
+      font-size: 1rem;
+      color: var(--text);
+    }
+    .cmd-list { padding: 12px; max-height: 300px; overflow-y: auto; }
+    .cmd-item {
+      padding: 12px 14px;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      cursor: pointer;
+    }
+    .cmd-item:hover { background: var(--bg-soft); color: var(--pink-brand); }
+
     @media (max-width: 960px) {
       .hero-grid, .about-card, .clearcall-hero-block, .proj-grid, .exp-grid, .skills-grid {
         grid-template-columns: 1fr;
@@ -633,9 +705,9 @@
             Available for Winter 2027 Co-ops & Internships
           </div>
 
-          <!-- Interactive Magnetic Headline with waving hand emoji -->
-          <h1 class="hero-title-interactive" id="interactiveTitle">
-            Hi, I'm evva 👋
+          <!-- Interactive Scramble Title -->
+          <h1 class="hero-title-interactive scramble-target">
+            Hi, I'm Evva 👋
           </h1>
 
           <p class="hero-p">
@@ -648,7 +720,6 @@
           </div>
         </div>
 
-        <!-- Clean Avatar Frame -->
         <div>
           <div class="avatar-clean-frame">
             <img src="Gemini_Generated_Image_a27p2ma27p2ma27p.jpg" alt="3D Cartoon Avatar of Evva">
@@ -662,7 +733,7 @@
       <div class="container">
         <div class="sec-header">
           <span class="sec-kicker">// Background</span>
-          <h2 class="sec-title">A Little About Me</h2>
+          <h2 class="sec-title scramble-target">A Little About Me</h2>
         </div>
 
         <div class="about-card">
@@ -709,7 +780,7 @@
       <div class="container">
         <div class="sec-header">
           <span class="sec-kicker">// Featured Project</span>
-          <h2 class="sec-title">ClearCall</h2>
+          <h2 class="sec-title scramble-target">ClearCall</h2>
         </div>
 
         <div class="clearcall-hero-block">
@@ -796,7 +867,7 @@
       <div class="container">
         <div class="sec-header">
           <span class="sec-kicker">// More Projects</span>
-          <h2 class="sec-title">Systems & Applications</h2>
+          <h2 class="sec-title scramble-target">Systems & Applications</h2>
         </div>
 
         <div class="proj-grid">
@@ -870,15 +941,15 @@
       <div class="container">
         <div class="sec-header">
           <span class="sec-kicker">// Real-World Impact</span>
-          <h2 class="sec-title">Experience & Leadership</h2>
+          <h2 class="sec-title scramble-target">Experience & Leadership</h2>
         </div>
 
         <div class="exp-grid">
-          <!-- Card 1: Escape Room (lock.glb) -->
+          <!-- Card 1: Escape Room (key.glb) -->
           <div class="exp-card">
-            <div class="exp-3d-box" id="lockCanvasBox" title="Click & Drag to rotate">
-              <canvas id="lockCanvas"></canvas>
-              <span class="exp-3d-hint">↺ Drag 3D Lock</span>
+            <div class="exp-3d-box" id="keyCanvasBox" title="Click & Drag to rotate">
+              <canvas id="keyCanvas"></canvas>
+              <span class="exp-3d-hint">↺ Drag 3D Key</span>
             </div>
             <div>
               <span style="font-family:var(--mono); font-size:0.75rem; color:var(--pink-brand); font-weight:700;">TECH & FABRICATION</span>
@@ -936,7 +1007,7 @@
       <div class="container">
         <div class="sec-header">
           <span class="sec-kicker">// Toolkit</span>
-          <h2 class="sec-title">Technical Skills</h2>
+          <h2 class="sec-title scramble-target">Technical Skills</h2>
         </div>
 
         <div class="skills-grid">
@@ -1019,53 +1090,58 @@
   </footer>
 
   <script>
-    // --- 1. Interactive Cursor Scramble Headline ---
-    const titleEl = document.getElementById('interactiveTitle');
-    const fullText = "Hi, I'm evva 👋";
-    titleEl.innerHTML = '';
+    // --- 1. Reusable Magnetic Scramble Logic for all Titles ---
+    function initMagneticText(element) {
+      const originalText = element.textContent.trim();
+      element.innerHTML = '';
+      
+      const chars = Array.from(originalText);
+      const letterSpans = chars.map(char => {
+        const span = document.createElement('span');
+        span.textContent = char;
+        span.className = 'scramble-letter';
+        if (char === ' ') span.style.width = '0.35em';
+        element.appendChild(span);
+        return span;
+      });
 
-    const chars = Array.from(fullText);
-    const letterSpans = chars.map(char => {
-      const span = document.createElement('span');
-      span.textContent = char;
-      span.className = 'scramble-letter';
-      if (char === ' ') span.style.width = '0.35em';
-      titleEl.appendChild(span);
-      return span;
-    });
+      element.addEventListener('mousemove', (e) => {
+        const mouseX = e.clientX;
+        const mouseY = e.clientY;
 
-    titleEl.addEventListener('mousemove', (e) => {
-      const mouseX = e.clientX;
-      const mouseY = e.clientY;
+        letterSpans.forEach(span => {
+          const spanRect = span.getBoundingClientRect();
+          const spanCenterX = spanRect.left + spanRect.width / 2;
+          const spanCenterY = spanRect.top + spanRect.height / 2;
+          const dist = Math.hypot(mouseX - spanCenterX, mouseY - spanCenterY);
 
-      letterSpans.forEach(span => {
-        const spanRect = span.getBoundingClientRect();
-        const spanCenterX = spanRect.left + spanRect.width / 2;
-        const spanCenterY = spanRect.top + spanRect.height / 2;
-        const dist = Math.hypot(mouseX - spanCenterX, mouseY - spanCenterY);
+          if (dist < 85) {
+            const power = (1 - dist / 85) * 22;
+            const angle = Math.atan2(spanCenterY - mouseY, spanCenterX - mouseX);
+            const pushX = Math.cos(angle) * power;
+            const pushY = Math.sin(angle) * power;
+            const rot = (Math.random() - 0.5) * 28;
 
-        if (dist < 85) {
-          const power = (1 - dist / 85) * 22;
-          const angle = Math.atan2(spanCenterY - mouseY, spanCenterX - mouseX);
-          const pushX = Math.cos(angle) * power;
-          const pushY = Math.sin(angle) * power;
-          const rot = (Math.random() - 0.5) * 28;
+            span.style.transform = `translate(${pushX}px, ${pushY}px) rotate(${rot}deg) scale(1.15)`;
+            span.style.color = 'var(--pink-brand)';
+          } else {
+            span.style.transform = 'translate(0, 0) rotate(0deg) scale(1)';
+            span.style.color = '';
+          }
+        });
+      });
 
-          span.style.transform = `translate(${pushX}px, ${pushY}px) rotate(${rot}deg) scale(1.15)`;
-          span.style.color = 'var(--pink-brand)';
-        } else {
+      element.addEventListener('mouseleave', () => {
+        letterSpans.forEach(span => {
           span.style.transform = 'translate(0, 0) rotate(0deg) scale(1)';
           span.style.color = '';
-        }
+        });
       });
-    });
+    }
 
-    titleEl.addEventListener('mouseleave', () => {
-      letterSpans.forEach(span => {
-        span.style.transform = 'translate(0, 0) rotate(0deg) scale(1)';
-        span.style.color = '';
-      });
-    });
+    // Apply scramble effect to all elements with the 'scramble-target' class
+    document.querySelectorAll('.scramble-target').forEach(initMagneticText);
+
 
     // --- 2. Minimalist Phone to Watch Signal ---
     function sendSignal(pitch, zone) {
@@ -1084,8 +1160,9 @@
       }, 120);
     }
 
-    // --- 3. Three.js GLTFLoader Setup for your .GLB files ---
-    function initGLBViewer(boxId, canvasId, glbFilename, initialScale = 1) {
+
+    // --- 3. Three.js GLTFLoader Setup with AUTO-SCALING for huge files ---
+    function initGLBViewer(boxId, canvasId, glbFilename, targetViewSize = 2.0) {
       const box = document.getElementById(boxId);
       const canvas = document.getElementById(canvasId);
       if (!box || !canvas) return;
@@ -1116,12 +1193,24 @@
         (gltf) => {
           const model = gltf.scene;
           
-          // Auto-center the model so it spins nicely on its axis
+          // 1. Calculate the bounding box of the imported model
           const box3 = new THREE.Box3().setFromObject(model);
+          const size = box3.getSize(new THREE.Vector3());
           const center = box3.getCenter(new THREE.Vector3());
-          model.position.sub(center);
           
-          model.scale.setScalar(initialScale);
+          // 2. Re-center the model so it spins smoothly around its actual middle
+          model.position.x = -center.x;
+          model.position.y = -center.y;
+          model.position.z = -center.z;
+          
+          // 3. AUTO-SCALE: Finds the largest side of the model, and scales it down to fit perfectly
+          const maxDim = Math.max(size.x, size.y, size.z);
+          // Prevent division by zero just in case
+          if (maxDim > 0) {
+            const scale = targetViewSize / maxDim;
+            model.scale.setScalar(scale);
+          }
+          
           objGroup.add(model);
         },
         undefined,
@@ -1173,11 +1262,34 @@
       });
     }
 
-    // Initialize your three downloaded models
-    // You can adjust the "initialScale" number (e.g. 1.2 or 0.8) to make them fit nicely in the box
-    initGLBViewer('lockCanvasBox', 'lockCanvas', 'lock.glb', 1.0);
-    initGLBViewer('ballCanvasBox', 'ballCanvas', 'softball.glb', 1.0);
-    initGLBViewer('cloudCanvasBox', 'cloudCanvas', 'cloud.glb', 1.0);
+    // Initialize your three downloaded models. 
+    // They will now auto-scale to exactly "2.0" view size, meaning they will fit perfectly in the box!
+    initGLBViewer('keyCanvasBox', 'keyCanvas', 'key.glb', 2.0);
+    initGLBViewer('ballCanvasBox', 'ballCanvas', 'softball.glb', 2.0);
+    initGLBViewer('cloudCanvasBox', 'cloudCanvas', 'cloud.glb', 2.0);
+
+    // --- 4. Command Palette (Cmd + K) ---
+    const overlay = document.getElementById('cmdOverlay');
+    const cmdBtn = document.getElementById('cmdBtn');
+    const cmdInput = document.getElementById('cmdInput');
+
+    function openCmd() { overlay.classList.add('open'); cmdInput.focus(); }
+    function closeCmd() { overlay.classList.remove('open'); cmdInput.value = ''; }
+
+    cmdBtn.addEventListener('click', openCmd);
+    window.addEventListener('keydown', (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        overlay.classList.contains('open') ? closeCmd() : openCmd();
+      }
+      if (e.key === 'Escape' && overlay.classList.contains('open')) closeCmd();
+    });
+    overlay.addEventListener('click', (e) => { if (e.target === overlay) closeCmd(); });
+
+    function jumpSection(id) {
+      closeCmd();
+      document.querySelector(id)?.scrollIntoView({ behavior: 'smooth' });
+    }
   </script>
 </body>
 </html>
